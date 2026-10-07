@@ -7,265 +7,269 @@
 <meta name="description" content="Курс по банковским партнёрским программам: 5 бесплатных уроков и полная программа — трафик, реклама, прямые партнёрства с банками, аналитика и масштабирование.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f6f4fb;
-  --surface:#ffffff;
-  --surface-2:#efeaf9;
-  --ink:#16122a;
-  --muted:#5f5a75;
-  --line:rgba(22,18,42,.09);
-  --violet:#7b4fe0;
-  --violet-2:#9a7bf0;
-  --blue:#7f9ce6;
-  --accent-ink:#ffffff;
-  --glow:rgba(123,79,224,.22);
-  --radius:22px;
-  --shadow:0 20px 60px -24px rgba(53,30,120,.28);
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#0e0b1a;--surface:#17122a;--surface-2:#1f1838;--ink:#f1edfb;--muted:#a59fbe;
-    --line:rgba(255,255,255,.09);--glow:rgba(140,100,255,.28);--shadow:0 20px 60px -24px rgba(0,0,0,.7);
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#0e0b1a;--surface:#17122a;--surface-2:#1f1838;--ink:#f1edfb;--muted:#a59fbe;
-  --line:rgba(255,255,255,.09);--glow:rgba(140,100,255,.28);--shadow:0 20px 60px -24px rgba(0,0,0,.7);
+  --bg:#f3f3f1;
+  --card:#e9e9e6;
+  --white:#ffffff;
+  --ink:#121212;
+  --muted:#6b6b6b;
+  --blue:#2446d8;
+  --blue-deep:#1a35b0;
+  --lime:#e3f264;
+  --line:rgba(18,18,18,.14);
+  --radius:28px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font-family:Manrope,system-ui,sans-serif;font-size:17px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-img{max-width:100%;display:block}
+body{background:var(--bg);color:var(--ink);font-family:Manrope,system-ui,sans-serif;font-size:16px;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
 a{color:inherit;text-decoration:none}
-h1,h2,h3{font-family:Unbounded,Manrope,sans-serif;font-weight:600;line-height:1.12;letter-spacing:-.02em}
-.wrap{width:min(1180px,100% - 32px);margin-inline:auto}
-section{padding:110px 0;position:relative}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--violet)}
-.eyebrow::before{content:"";width:22px;height:2px;background:currentColor;border-radius:2px}
-.h2{font-size:clamp(30px,4.2vw,50px);margin:14px 0 18px}
-.lead{color:var(--muted);font-size:clamp(17px,1.4vw,19px);max-width:620px}
+button{font:inherit;color:inherit}
+h1,h2,h3{font-family:Unbounded,Manrope,sans-serif;text-transform:uppercase;letter-spacing:-.02em;line-height:1}
+.wrap{width:min(1200px,100% - 32px);margin-inline:auto}
+section{padding:100px 0;position:relative}
+.title{font-size:clamp(28px,4.4vw,56px);font-weight:800;text-align:center}
+.title em{font-style:normal;color:var(--blue)}
+.sub{text-align:center;color:var(--muted);max-width:600px;margin:18px auto 0;font-size:17px}
 
-/* cursor light */
-.cursor-light{position:fixed;left:0;top:0;width:520px;height:520px;border-radius:50%;pointer-events:none;z-index:0;
-  background:radial-gradient(circle,var(--glow) 0%,transparent 65%);transform:translate(-50%,-50%);transition:opacity .4s;opacity:0}
-.cursor-dot{position:fixed;left:0;top:0;width:10px;height:10px;border-radius:50%;background:var(--violet);pointer-events:none;z-index:100;
-  transform:translate(-50%,-50%);transition:width .25s,height .25s,background .25s,opacity .3s;opacity:0;mix-blend-mode:normal}
-.cursor-dot.big{width:46px;height:46px;background:rgba(123,79,224,.15);border:1px solid var(--violet)}
-@media (pointer:fine){.cursor-light,.cursor-dot{opacity:1}}
+/* cursor */
+.cursor{position:fixed;left:0;top:0;width:12px;height:12px;border-radius:50%;background:var(--blue);pointer-events:none;z-index:300;
+  transform:translate(-50%,-50%);transition:width .25s,height .25s,background .25s;display:none}
+.cursor.big{width:54px;height:54px;background:rgba(227,242,100,.55);mix-blend-mode:multiply}
+@media (pointer:fine){.cursor{display:block}}
+
+/* pills & buttons */
+.pill{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:999px;border:1.5px solid var(--ink);font-family:Unbounded,sans-serif;font-weight:700;font-size:11px;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap;background:transparent;cursor:pointer;transition:background .25s,color .25s}
+.pill:hover{background:var(--ink);color:var(--white)}
+.pill.lime{background:var(--lime);border-color:var(--lime);color:var(--ink)}
+.pill.lime:hover{background:var(--ink);border-color:var(--ink);color:var(--lime)}
+.btn{--x:0px;--y:0px;display:inline-flex;align-items:center;gap:10px;padding:18px 30px;border-radius:999px;border:2px solid transparent;cursor:pointer;
+  font-family:Unbounded,sans-serif;font-weight:700;font-size:13px;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap;
+  transform:translate(var(--x),var(--y));transition:transform .35s cubic-bezier(.2,.8,.2,1),background .25s,color .25s,box-shadow .3s;will-change:transform}
+.btn span{display:inline-block;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.btn-lime{background:var(--lime);color:var(--ink)}
+.btn-lime:hover{box-shadow:0 14px 34px -10px rgba(227,242,100,.9)}
+.btn-line{border-color:currentColor;color:var(--white)}
+.btn-line:hover{background:var(--white);color:var(--blue)}
+.btn-blue{background:var(--blue);color:var(--white)}
+.btn-blue:hover{background:var(--blue-deep)}
+.btn-ink{background:var(--ink);color:var(--lime)}
 
 /* nav */
-.nav{position:fixed;inset:16px 0 auto;z-index:50}
-.nav-in{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 10px 10px 22px;border-radius:999px;
-  background:color-mix(in srgb,var(--surface) 72%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line);box-shadow:0 8px 30px -18px rgba(53,30,120,.35)}
-.logo{font-family:Unbounded,sans-serif;font-weight:600;font-size:15px;display:flex;align-items:center;gap:10px}
-.logo-mark{width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,var(--blue),var(--violet));display:grid;place-items:center;color:#fff;font-size:13px}
-.nav-links{display:flex;gap:28px;font-size:15px;font-weight:500;color:var(--muted)}
-.nav-links a:hover{color:var(--ink)}
-.theme-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;display:grid;place-items:center}
-.nav-right{display:flex;align-items:center;gap:8px}
-@media (max-width:860px){.nav-links{display:none}}
-
-/* buttons */
-.btn{--x:0px;--y:0px;position:relative;display:inline-flex;align-items:center;gap:10px;padding:16px 26px;border-radius:999px;font-weight:700;font-size:16px;border:0;cursor:pointer;
-  font-family:inherit;transform:translate(var(--x),var(--y));transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .3s,background .3s;will-change:transform;white-space:nowrap}
-.btn span{display:inline-block;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
-.btn-primary{background:linear-gradient(135deg,var(--violet-2),var(--violet));color:var(--accent-ink);box-shadow:0 14px 34px -12px rgba(123,79,224,.7)}
-.btn-primary:hover{box-shadow:0 20px 44px -12px rgba(123,79,224,.85)}
-.btn-ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
-.btn-sm{padding:11px 18px;font-size:14px}
-.btn .arrow{transition:transform .3s}
-.btn:hover .arrow{transform:translateX(4px)}
-.badge-free{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.22)}
+.nav{position:sticky;top:0;z-index:50;padding:14px 0;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.nav-links{display:flex;gap:8px}
+@media (max-width:820px){.nav-links{display:none}}
 
 /* hero */
-.hero{padding:150px 0 90px;min-height:100vh;display:flex;align-items:center;overflow:hidden}
-.hero::before{content:"";position:absolute;inset:-20% -10% auto auto;width:70vw;height:70vw;max-width:900px;max-height:900px;border-radius:50%;
-  background:radial-gradient(circle at 40% 40%,rgba(127,156,230,.45),rgba(123,79,224,.35) 45%,transparent 70%);filter:blur(30px);z-index:-1}
-.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
-.hero h1{font-size:clamp(36px,5.6vw,72px);margin:22px 0 24px}
-.hero h1 em{font-style:normal;background:linear-gradient(100deg,var(--blue),var(--violet) 60%);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero .lead{margin-bottom:36px}
-.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
-.hero-meta{display:flex;gap:34px;margin-top:48px;flex-wrap:wrap}
-.hero-meta b{display:block;font-family:Unbounded,sans-serif;font-size:28px;font-weight:600}
-.hero-meta span{color:var(--muted);font-size:14px}
-.portrait{position:relative;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
-.portrait-frame{border-radius:200px 200px 32px 32px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:900/1180;background:linear-gradient(160deg,#8d7ce0,#7b9be0)}
-.portrait-frame img{width:100%;height:100%;object-fit:cover;object-position:top}
-.chip{position:absolute;display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:16px;background:color-mix(in srgb,var(--surface) 88%,transparent);
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--line);box-shadow:var(--shadow);font-size:14px;font-weight:600;animation:float 6s ease-in-out infinite}
-.chip i{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-style:normal;background:var(--surface-2);font-size:16px}
-.chip small{display:block;color:var(--muted);font-weight:500;font-size:12px}
-.chip-1{left:-40px;top:22%}
-.chip-2{right:-24px;bottom:16%;animation-delay:-3s}
-@keyframes float{50%{translate:0 -10px}}
-@media (max-width:920px){
-  .hero-grid{grid-template-columns:1fr}
-  .portrait{max-width:420px;margin-inline:auto;width:100%}
-  .chip-1{left:-6px}.chip-2{right:-6px}
+.hero{padding:12px 0 0}
+.hero-card{position:relative;background:var(--blue);color:var(--white);border-radius:40px;min-height:660px;overflow:hidden;padding:44px 52px;isolation:isolate}
+.hero-card::before{content:"";position:absolute;inset:auto -10% -40% auto;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.14),transparent 60%);z-index:-2}
+.hero-tag{border-color:rgba(255,255,255,.6);color:var(--white);cursor:default}
+.hero-tag:hover{background:transparent;color:var(--white)}
+.hero-photo{position:absolute;left:50%;bottom:0;width:min(420px,36%);transform:translateX(-50%);z-index:1;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.hero-photo img{width:100%;filter:drop-shadow(0 30px 40px rgba(0,0,0,.25))}
+.hero-left,.hero-right,.hero-cta{position:absolute;z-index:2}
+.hero-left{left:52px;top:118px}
+.hero-right{right:52px;top:230px;text-align:right}
+.hero-cta{left:52px;top:330px;max-width:330px}
+.big{font-family:Unbounded,sans-serif;font-weight:900;text-transform:uppercase;line-height:.92;letter-spacing:-.03em;font-size:clamp(44px,5.8vw,82px)}
+.big.lime-t{color:var(--lime)}
+.hero-right .big{font-size:clamp(44px,5.8vw,82px)}
+.hero-right .mid{font-family:Unbounded,sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(18px,2.2vw,30px);margin-top:10px}
+.hero-lead{margin:22px 0 30px;opacity:.88;font-size:16px;max-width:330px}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+.coin{position:absolute;right:22%;bottom:16%;z-index:3;width:92px;height:92px;border-radius:28px;background:var(--lime);color:var(--blue);display:grid;place-items:center;
+  font-family:Unbounded,sans-serif;font-weight:900;font-size:44px;transform:rotate(-12deg);box-shadow:0 18px 30px -10px rgba(0,0,0,.35);animation:bob 5s ease-in-out infinite;transition:translate .4s ease-out}
+.coin.c2{right:auto;left:46%;bottom:auto;top:16%;width:58px;height:58px;font-size:22px;border-radius:18px;background:var(--white);transform:rotate(14deg);animation-delay:-2.5s}
+@keyframes bob{50%{margin-top:-14px}}
+.hero-free{position:absolute;right:52px;bottom:44px;z-index:3;max-width:250px;text-align:right;font-size:14px;opacity:.9}
+.hero-free b{display:block;font-family:Unbounded,sans-serif;font-size:38px;color:var(--lime);line-height:1}
+@media (max-width:980px){
+  .hero-card{padding:30px 22px 0;min-height:auto;display:flex;flex-direction:column}
+  .hero-left,.hero-right,.hero-cta,.hero-free{position:static;max-width:none;text-align:left}
+  .hero-left{margin-top:22px}
+  .hero-tag{order:0;align-self:flex-start}.hero-left{order:1}.hero-right{order:2}.hero-cta{order:3}.hero-free{order:4}.hero-photo{order:5}
+  .hero-right{margin-top:6px}
+  .hero .big{font-size:clamp(34px,10.5vw,64px)}
+  .hero-free{margin:26px 0 0}
+  .hero-cta .hero-lead{margin-top:18px}
+  .hero-photo{position:relative;left:auto;transform:none;width:min(360px,85%);margin:20px auto 0}
+  .coin{right:8%;bottom:12%;width:70px;height:70px;font-size:32px;border-radius:22px}
+  .coin.c2{display:none}
 }
 
-/* path marquee */
-.path{padding:0;border-block:1px solid var(--line);background:var(--surface);overflow:hidden}
-.marquee{display:flex;gap:0;width:max-content;animation:marq 38s linear infinite;padding:22px 0}
-.marquee:hover{animation-play-state:paused}
-.marquee span{font-family:Unbounded,sans-serif;font-size:clamp(16px,2vw,22px);font-weight:500;white-space:nowrap;padding:0 26px;display:flex;align-items:center;gap:52px}
-.marquee span::after{content:"→";color:var(--violet)}
-@keyframes marq{to{transform:translateX(-50%)}}
+/* ticker */
+.ticker{overflow:hidden;padding:22px 0;border-bottom:1.5px solid var(--line)}
+.ticker-track{display:flex;gap:10px;width:max-content;animation:tick 40s linear infinite}
+.ticker:hover .ticker-track{animation-play-state:paused}
+@keyframes tick{to{transform:translateX(-50%)}}
 
-/* free lessons */
-.free-head{display:flex;justify-content:space-between;align-items:end;gap:30px;flex-wrap:wrap;margin-bottom:52px}
-.lessons{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
-.card{--mx:50%;--my:50%;position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;overflow:hidden;
-  transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .3s;transform-style:preserve-3d}
-.card::before{content:"";position:absolute;inset:0;background:radial-gradient(360px circle at var(--mx) var(--my),var(--glow),transparent 45%);opacity:0;transition:opacity .3s;pointer-events:none}
-.card:hover::before{opacity:1}
-.card:hover{border-color:color-mix(in srgb,var(--violet) 40%,transparent)}
-.card > *{position:relative}
-.lesson-num{font-family:Unbounded,sans-serif;font-size:13px;color:var(--violet);font-weight:600;display:flex;justify-content:space-between;align-items:center}
-.lesson-num em{font-style:normal;font-family:Manrope,sans-serif;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#1f8a5b;background:rgba(31,138,91,.12);padding:4px 8px;border-radius:999px}
-.lesson h3{font-size:17px;margin:40px 0 12px;line-height:1.3}
-.lesson p{color:var(--muted);font-size:15px}
-.free-cta{margin-top:40px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;padding:28px 32px;border-radius:var(--radius);
-  background:linear-gradient(120deg,rgba(127,156,230,.18),rgba(123,79,224,.18));border:1px solid var(--line)}
-.free-cta p{flex:1;min-width:240px;font-weight:600}
-@media (max-width:1060px){.lessons{grid-template-columns:repeat(2,1fr)}.lessons .lesson:last-child{grid-column:span 2}}
-@media (max-width:600px){.lessons{grid-template-columns:1fr}.lessons .lesson:last-child{grid-column:auto}}
+/* audience */
+.aud{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:52px}
+.acard{position:relative;min-height:250px;border-radius:var(--radius);background:var(--card);padding:28px;display:flex;flex-direction:column;gap:12px;overflow:hidden;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1),background .3s}
+.acard h3{font-size:15px;font-weight:800;line-height:1.25;max-width:270px}
+.acard p{font-size:14px;color:var(--muted);max-width:270px}
+.acard.lime{background:var(--lime)}
+.acard.blue{background:var(--blue);color:var(--white)}
+.acard.blue p{color:rgba(255,255,255,.8)}
+.acard .tap{margin-top:auto;align-self:flex-end;width:38px;height:38px;border-radius:50%;background:var(--lime);display:grid;place-items:center;border:1.5px solid rgba(18,18,18,.25);transition:transform .4s}
+.acard.lime .tap{background:var(--white)}
+.acard:hover .tap{transform:rotate(-20deg) scale(1.12)}
+.acard.photo img{position:absolute;right:-30px;bottom:0;width:58%;filter:grayscale(1) contrast(1.05);opacity:.9;transition:filter .5s}
+.acard.photo:hover img{filter:grayscale(0)}
+.acard.photo > *:not(img){position:relative;z-index:1}
+.acard.photo p{max-width:55%}
+@media (max-width:900px){.aud{grid-template-columns:1fr 1fr}}
+@media (max-width:580px){.aud{grid-template-columns:1fr}.acard{min-height:200px}}
 
-/* principle */
-.principle{background:var(--ink);color:var(--bg);border-radius:40px;margin:0 16px;padding:100px 0;overflow:hidden}
-.principle .eyebrow{color:var(--violet-2)}
-.principle-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.principle h2{font-size:clamp(30px,4vw,52px)}
-.principle h2 em{font-style:normal;color:var(--violet-2)}
+/* principle band */
+.band{background:var(--ink);color:var(--white);border-radius:40px;padding:70px 52px;display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center}
+.band .big{font-size:clamp(34px,4.6vw,64px)}
+.band .big em{font-style:normal;color:var(--lime)}
 .steps{display:grid;gap:12px}
-.step{display:flex;gap:18px;align-items:center;padding:18px 22px;border-radius:18px;background:color-mix(in srgb,var(--bg) 6%,transparent);border:1px solid color-mix(in srgb,var(--bg) 12%,transparent);
-  transition:transform .35s,background .35s}
-.step:hover{transform:translateX(8px);background:color-mix(in srgb,var(--bg) 10%,transparent)}
-.step b{font-family:Unbounded,sans-serif;font-size:13px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--violet);color:#fff;flex:none}
-.step span{opacity:.75;font-size:15px;display:block}
-@media (max-width:860px){.principle-grid{grid-template-columns:1fr}.principle{border-radius:28px;margin:0 8px}}
+.step{display:flex;gap:18px;align-items:center;padding:20px 22px;border-radius:22px;border:1.5px solid rgba(255,255,255,.18);transition:background .3s,transform .35s,color .3s}
+.step:hover{background:var(--lime);color:var(--ink);transform:translateX(8px)}
+.step b{font-family:Unbounded,sans-serif;font-size:22px;font-weight:900;color:var(--lime);min-width:36px}
+.step:hover b{color:var(--blue)}
+.step strong{display:block;font-family:Unbounded,sans-serif;text-transform:uppercase;font-size:13px;margin-bottom:4px}
+.step span{font-size:14px;opacity:.75}
+@media (max-width:880px){.band{grid-template-columns:1fr;padding:44px 24px;border-radius:30px}}
 
-/* program */
-.program-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:52px}
-.module{padding:32px;display:flex;flex-direction:column;gap:14px;min-height:280px}
-.module.m-a{grid-column:span 3}
-.module.m-b{grid-column:span 3}
-.module.m-c{grid-column:span 2}
-.module.m-d{grid-column:span 2}
-.module.m-e{grid-column:span 2}
-.module-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.module-tag{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.module-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--surface-2);color:var(--violet);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
-.module:hover .module-icon{transform:rotate(-8deg) scale(1.08)}
-.module h3{font-size:22px;margin-top:auto}
-.module p{color:var(--muted);font-size:15px}
-.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
-.tags span{font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--surface-2);color:var(--ink)}
-.module.feature{background:linear-gradient(150deg,#8a72e6,#6f8fe0);color:#fff;border:0}
-.module.feature p,.module.feature .module-tag{color:rgba(255,255,255,.82)}
-.module.feature .tags span{background:rgba(255,255,255,.18);color:#fff}
-.module.feature .module-icon{background:rgba(255,255,255,.18);color:#fff}
-@media (max-width:960px){.program-grid{grid-template-columns:1fr 1fr}.module.m-a,.module.m-b,.module.m-c,.module.m-d,.module.m-e{grid-column:span 1}.module.m-e{grid-column:span 2}}
-@media (max-width:640px){.program-grid{grid-template-columns:1fr}.module.m-e{grid-column:auto}}
+/* stacked program (accordion) */
+.stack{margin-top:52px;display:flex;flex-direction:column}
+.tab{border-radius:34px 34px 0 0;margin-top:-30px;padding:26px 40px 56px;position:relative}
+.tab:first-child{margin-top:0}
+.tab:last-child{border-radius:34px;padding-bottom:30px}
+.tab:nth-child(odd){background:var(--lime)}
+.tab:nth-child(even){background:var(--blue);color:var(--white)}
+.tab.dark{background:var(--ink)!important;color:var(--white)}
+.tab-head{display:grid;grid-template-columns:200px 1fr auto;gap:24px;align-items:center;width:100%;background:none;border:0;text-align:left;cursor:pointer}
+.tab-head .num{font-family:Unbounded,sans-serif;font-weight:800;font-size:clamp(18px,2vw,24px);text-transform:uppercase}
+.tab:nth-child(even) .tab-head .num,.tab.dark .tab-head .num{color:var(--lime)}
+.tab-head .name{font-family:Unbounded,sans-serif;font-weight:800;font-size:clamp(15px,1.8vw,22px);text-transform:uppercase;line-height:1.15}
+.tab-head .plus{width:44px;height:44px;border-radius:50%;border:1.5px solid currentColor;display:grid;place-items:center;font-size:22px;transition:transform .4s}
+.tab.open .plus{transform:rotate(45deg)}
+.tab-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s cubic-bezier(.2,.8,.2,1)}
+.tab.open .tab-body{grid-template-rows:1fr}
+.tab-body > div{overflow:hidden}
+.tab-inner{display:grid;grid-template-columns:200px 1fr;gap:24px;padding-top:22px}
+.tab-inner .meta{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.tab-inner .meta span{display:inline-block;padding:7px 12px;border-radius:999px;border:1.5px solid currentColor}
+.box{border-radius:22px;border:1.5px solid currentColor;padding:22px 26px}
+.tab:nth-child(even) .box,.tab.dark .box{border-color:rgba(255,255,255,.4)}
+.box ul{list-style:none;display:grid;gap:8px}
+.box li{display:flex;gap:10px}
+.box li::before{content:"•";font-weight:800}
+.box p{margin-bottom:10px}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.tag-row span{padding:7px 14px;border-radius:999px;font-size:13px;font-weight:700;background:rgba(255,255,255,.18)}
+.tab:nth-child(odd):not(.dark) .tag-row span{background:rgba(18,18,18,.08)}
+@media (max-width:760px){
+  .tab{padding:22px 20px 52px;border-radius:26px 26px 0 0}
+  .tab:last-child{border-radius:26px}
+  .tab-head{grid-template-columns:1fr auto;gap:6px 14px}
+  .tab-head .num,.tab-head .name{grid-column:1}
+  .tab-head .plus{grid-row:1 / span 2;grid-column:2}
+  .tab-inner{grid-template-columns:1fr;gap:14px}
+  .box{padding:18px}
+}
+.after-stack{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:34px}
 
 /* about */
-.about-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:center}
-.quote{font-family:Unbounded,sans-serif;font-size:clamp(22px,2.6vw,32px);line-height:1.35;font-weight:500;letter-spacing:-.01em}
-.quote::before{content:"“";display:block;font-size:80px;line-height:.6;color:var(--violet);margin-bottom:18px}
-.about-points{display:grid;gap:14px;margin-top:8px}
-.about-points li{list-style:none;display:flex;gap:14px;align-items:flex-start;padding:18px 20px;border-radius:18px;background:var(--surface);border:1px solid var(--line)}
-.about-points li::before{content:"";flex:none;width:10px;height:10px;border-radius:50%;margin-top:8px;background:linear-gradient(135deg,var(--blue),var(--violet))}
-@media (max-width:860px){.about-grid{grid-template-columns:1fr;gap:36px}}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:52px}
+.about .q{background:var(--blue);color:var(--white);border-radius:var(--radius);padding:44px;display:flex;flex-direction:column;justify-content:space-between;gap:30px;min-height:380px}
+.about .q p{font-family:Unbounded,sans-serif;font-weight:700;font-size:clamp(18px,2vw,26px);line-height:1.3;letter-spacing:-.01em}
+.about .q small{color:var(--lime);font-weight:800;text-transform:uppercase;letter-spacing:.06em;font-size:12px}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fact{background:var(--card);border-radius:var(--radius);padding:26px;display:flex;flex-direction:column;justify-content:space-between;gap:18px;transition:background .3s}
+.fact:hover{background:var(--lime)}
+.fact b{font-family:Unbounded,sans-serif;font-weight:900;font-size:34px;color:var(--blue);line-height:1}
+.fact span{font-size:14px;font-weight:600}
+@media (max-width:860px){.about{grid-template-columns:1fr}.about .q{padding:30px;min-height:auto}}
+@media (max-width:420px){.facts{grid-template-columns:1fr}}
 
 /* plans */
-.plans{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:52px}
-.plan{padding:38px;display:flex;flex-direction:column;gap:18px}
-.plan h3{font-size:24px}
-.plan .price{font-family:Unbounded,sans-serif;font-size:36px;font-weight:600}
-.plan .price small{font-size:15px;color:var(--muted);font-family:Manrope,sans-serif;font-weight:500}
-.plan ul{list-style:none;display:grid;gap:10px;margin:6px 0 14px}
-.plan li{display:flex;gap:10px;color:var(--muted)}
-.plan li::before{content:"✓";color:var(--violet);font-weight:800}
-.plan .btn{align-self:flex-start;margin-top:auto}
-.plan.pro{background:var(--ink);color:var(--bg);border:0}
-.plan.pro li,.plan.pro .price small{color:color-mix(in srgb,var(--bg) 75%,transparent)}
-.plan.pro li::before{color:var(--violet-2)}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:52px}
+.plan{border-radius:var(--radius);padding:40px;display:flex;flex-direction:column;gap:18px;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.plan.free{background:var(--lime)}
+.plan.pro{background:var(--blue);color:var(--white)}
+.plan h3{font-size:26px;font-weight:900}
+.plan .price{font-family:Unbounded,sans-serif;font-size:44px;font-weight:900;line-height:1}
+.plan .price small{font-family:Manrope,sans-serif;font-size:15px;font-weight:600;opacity:.75}
+.plan ul{list-style:none;display:grid;gap:10px;margin-bottom:12px}
+.plan li{display:flex;gap:10px;font-weight:600}
+.plan li::before{content:"→"}
+.plan .btn{margin-top:auto;align-self:flex-start}
 @media (max-width:760px){.plans{grid-template-columns:1fr}.plan{padding:28px}}
 
 /* faq */
-.faq{max-width:820px;margin:48px auto 0;display:grid;gap:12px}
-.faq details{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:4px 24px;transition:border-color .3s}
-.faq details[open]{border-color:color-mix(in srgb,var(--violet) 40%,transparent)}
-.faq summary{list-style:none;cursor:pointer;padding:18px 0;font-weight:700;display:flex;justify-content:space-between;gap:20px;align-items:center}
+.faq{max-width:860px;margin:48px auto 0;display:grid;gap:10px}
+.faq details{background:var(--card);border-radius:22px;padding:4px 26px;transition:background .3s}
+.faq details[open]{background:var(--white)}
+.faq summary{list-style:none;cursor:pointer;padding:20px 0;font-family:Unbounded,sans-serif;font-weight:700;font-size:14px;text-transform:uppercase;display:flex;justify-content:space-between;gap:16px;align-items:center}
 .faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";font-size:24px;font-weight:400;color:var(--violet);transition:transform .3s}
+.faq summary::after{content:"+";flex:none;width:34px;height:34px;border-radius:50%;background:var(--lime);display:grid;place-items:center;font-size:20px;transition:transform .3s}
 .faq details[open] summary::after{transform:rotate(45deg)}
-.faq details p{color:var(--muted);padding-bottom:20px}
+.faq details p{color:var(--muted);padding-bottom:22px}
 
 /* final */
-.final{text-align:center;padding:120px 0 130px}
-.final-box{padding:80px 24px;border-radius:40px;background:linear-gradient(140deg,#8a72e6,#6f8fe0);color:#fff;position:relative;overflow:hidden}
-.final-box::after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.12);right:-120px;top:-160px}
-.final h2{font-size:clamp(30px,4.6vw,56px);max-width:820px;margin:0 auto 20px}
-.final p{opacity:.85;max-width:560px;margin:0 auto 34px}
-.final .btn-primary{background:#fff;color:#4b2eb0;box-shadow:0 16px 40px -14px rgba(0,0,0,.35)}
-.final .badge-free{background:rgba(75,46,176,.12)}
+.final-card{background:var(--blue);color:var(--white);border-radius:40px;padding:80px 24px;text-align:center;position:relative;overflow:hidden}
+.final-card .big{font-size:clamp(34px,5.4vw,76px)}
+.final-card p{opacity:.85;max-width:520px;margin:20px auto 34px}
+.final-card .coin{right:6%;bottom:auto;top:14%}
+.final-card .coin.c2{left:7%;top:auto;bottom:14%;display:grid}
+@media (max-width:760px){.final-card .coin{display:none!important}}
 
-footer{padding:40px 0 60px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
-.foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
-.disclaimer{max-width:640px}
+footer{padding:34px 0 50px}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.foot p{max-width:620px}
 
 /* modal */
-.modal{position:fixed;inset:0;z-index:200;display:none;place-items:center;padding:16px;background:rgba(14,11,26,.55);backdrop-filter:blur(6px)}
+.modal{position:fixed;inset:0;z-index:200;display:none;place-items:center;padding:16px;background:rgba(18,18,18,.55);backdrop-filter:blur(6px)}
 .modal.open{display:grid;animation:fade .3s}
-.modal-box{width:min(460px,100%);background:var(--surface);border-radius:28px;padding:36px;position:relative;box-shadow:var(--shadow);animation:pop .4s cubic-bezier(.2,.8,.2,1)}
-.modal-box h3{font-size:24px;margin-bottom:10px}
-.modal-box p{color:var(--muted);font-size:15px;margin-bottom:22px}
-.modal-close{position:absolute;right:16px;top:16px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:20px;cursor:pointer}
-.field{display:grid;gap:6px;margin-bottom:14px;font-size:14px;font-weight:600}
-.field input{font:inherit;font-weight:500;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);outline:none}
-.field input:focus{border-color:var(--violet);box-shadow:0 0 0 4px var(--glow)}
+.modal-box{width:min(460px,100%);background:var(--white);border-radius:32px;padding:38px;position:relative;animation:pop .4s cubic-bezier(.2,.8,.2,1)}
+.modal-box h3{font-size:22px;font-weight:900;margin-bottom:10px;padding-right:40px}
+.modal-box form > p,.success p{color:var(--muted);margin-bottom:22px}
+.modal-close{position:absolute;right:16px;top:16px;width:40px;height:40px;border-radius:50%;border:0;background:var(--lime);font-size:22px;cursor:pointer}
+.field{display:grid;gap:6px;margin-bottom:14px;font-size:13px;font-weight:700}
+.field input{font:inherit;font-weight:500;padding:15px 18px;border-radius:16px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);outline:none}
+.field input:focus{border-color:var(--blue)}
 .consent{display:flex;gap:10px;font-size:13px;color:var(--muted);margin:6px 0 20px;align-items:flex-start}
-.consent input{margin-top:3px;accent-color:var(--violet)}
+.consent input{margin-top:3px;accent-color:var(--blue)}
 .modal .btn{width:100%;justify-content:center}
 .success{display:none;text-align:center}
-.success b{font-size:46px;display:block;margin-bottom:8px}
+.success .big{color:var(--blue);font-size:40px;margin-bottom:12px}
 @keyframes fade{from{opacity:0}}
 @keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}}
 
 /* reveal */
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
 .reveal.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .reveal{opacity:1;transform:none}
-  .cursor-light,.cursor-dot{display:none}
+  .cursor{display:none!important}
 }
-.show-sm{display:none!important}
-@media (max-width:600px){.hide-sm{display:none!important}.show-sm{display:inline-block!important}.logo{font-size:13px}.nav-in{padding-left:14px}.hero-meta{gap:22px}section{padding:80px 0}.hero{padding-top:120px}.free-cta{padding:22px}.modal-box{padding:28px 22px}}
+@media (max-width:600px){section{padding:72px 0}.hero{padding-top:6px}.hero-card{border-radius:30px}.final-card{border-radius:30px;padding:60px 20px}.hide-sm{display:none!important}}
 </style>
 </head>
 <body>
 
-<div class="cursor-light" aria-hidden="true"></div>
-<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor" aria-hidden="true"></div>
 
 <header class="nav">
   <div class="wrap nav-in">
-    <a href="#top" class="logo"><span class="logo-mark">₽</span>Банковские партнёрки</a>
+    <a href="#top" class="pill lime">БАНК_ПАРТНЁРКИ</a>
     <nav class="nav-links">
-      <a href="#free">Бесплатно</a>
-      <a href="#program">Программа</a>
-      <a href="#about">Об авторе</a>
-      <a href="#faq">Вопросы</a>
+      <a href="#free" class="pill">Бесплатно</a>
+      <a href="#program" class="pill">Программа</a>
+      <a href="#plans" class="pill">Тарифы</a>
     </nav>
-    <div class="nav-right">
-      <button class="theme-btn" id="themeBtn" aria-label="Сменить тему"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
-      <button class="btn btn-primary btn-sm magnetic" data-open-modal><span class="hide-sm">5 уроков бесплатно</span><span class="show-sm">Бесплатно</span></button>
-    </div>
+    <a href="#faq" class="pill lime hide-sm">Задать вопрос</a>
   </div>
 </header>
 
@@ -273,172 +277,182 @@ footer{padding:40px 0 60px;color:var(--muted);font-size:14px;border-top:1px soli
 
 <!-- HERO -->
 <section class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <div class="eyebrow reveal">Курс по партнёрским программам банков</div>
-      <h1 class="reveal">Зарабатывайте на&nbsp;партнёрках <em>системно</em>, а&nbsp;не&nbsp;наугад</h1>
-      <p class="lead reveal">От первой партнёрской ссылки до работающей системы: оффер, клиент, трафик, воронка, аналитика. Начните с пяти бесплатных уроков — без обещаний «лёгких денег», только понятная механика.</p>
-      <div class="hero-ctas reveal">
-        <button class="btn btn-primary magnetic" data-open-modal><span>Смотреть бесплатные уроки</span> <span class="badge-free">5 уроков</span></button>
-        <a href="#program" class="btn btn-ghost magnetic"><span>Программа курса</span> <span class="arrow">→</span></a>
+  <div class="wrap">
+    <div class="hero-card" id="hero">
+      <span class="pill hero-tag">Онлайн-курс · банковские офферы</span>
+
+      <div class="hero-left reveal">
+        <div class="big">Партнёрки</div>
       </div>
-      <div class="hero-meta reveal">
-        <div><b>5</b><span>бесплатных уроков</span></div>
-        <div><b>20+</b><span>уроков в полной программе</span></div>
-        <div><b>1→3</b><span>этапа: тест · повтор · система</span></div>
+
+      <div class="hero-cta reveal">
+        <p class="hero-lead">Узнаете, как зарабатывать на партнёрских программах банков: оффер, клиент, трафик и воронка — без обещаний «лёгких денег».</p>
+        <div class="hero-ctas">
+          <button class="btn btn-lime magnetic" data-open-modal><span>5 уроков бесплатно</span></button>
+          <a href="#program" class="btn btn-line magnetic"><span>Программа</span></a>
+        </div>
       </div>
-    </div>
-    <div class="portrait reveal" id="portrait">
-      <div class="portrait-frame"><img src="assets/portrait.webp" alt="Автор курса" width="900" height="1313"></div>
-      <div class="chip chip-1"><i>🎁</i><div>Модуль 1<small>открыт бесплатно</small></div></div>
-      <div class="chip chip-2"><i>📈</i><div>1 оффер · 1 источник<small>первый тест за 30 дней</small></div></div>
+
+      <div class="hero-photo" id="heroPhoto"><img src="assets/portrait-cut.webp" alt="Автор курса" width="884" height="1306"></div>
+
+      <div class="hero-right reveal">
+        <div class="big lime-t">Банков</div>
+        <div class="mid">с нуля до системы</div>
+      </div>
+
+      <div class="coin" aria-hidden="true">₽</div>
+      <div class="coin c2" aria-hidden="true">%</div>
+
+      <div class="hero-free reveal"><b>5 уроков</b>первого модуля открыты бесплатно — начните сегодня</div>
     </div>
   </div>
 </section>
 
-<!-- PATH -->
-<div class="path" aria-label="Логика курса">
-  <div class="marquee">
-    <span>Понять систему</span><span>Выбрать оффер</span><span>Один источник</span><span>Собрать воронку</span><span>Протестировать</span><span>Посчитать</span><span>Масштабировать</span>
-    <span>Понять систему</span><span>Выбрать оффер</span><span>Один источник</span><span>Собрать воронку</span><span>Протестировать</span><span>Посчитать</span><span>Масштабировать</span>
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="pill">5 уроков бесплатно</span><span class="pill">Партнёрская ссылка</span><span class="pill">CPA · CPL</span><span class="pill">Трафик</span><span class="pill">Реклама</span><span class="pill">Воронки</span><span class="pill">Аналитика</span><span class="pill">Прямые партнёрства</span><span class="pill">Масштабирование</span>
+    <span class="pill">5 уроков бесплатно</span><span class="pill">Партнёрская ссылка</span><span class="pill">CPA · CPL</span><span class="pill">Трафик</span><span class="pill">Реклама</span><span class="pill">Воронки</span><span class="pill">Аналитика</span><span class="pill">Прямые партнёрства</span><span class="pill">Масштабирование</span>
   </div>
 </div>
 
-<!-- FREE -->
-<section id="free">
+<!-- AUDIENCE -->
+<section id="for">
   <div class="wrap">
-    <div class="free-head">
-      <div>
-        <div class="eyebrow reveal">Модуль 1 · бесплатно</div>
-        <h2 class="h2 reveal">5 уроков, чтобы понять,<br>как здесь зарабатывают</h2>
+    <h2 class="title reveal"><em>Для кого</em> обучение?</h2>
+    <div class="aud">
+      <article class="acard lime tilt reveal"><h3>Кто хочет дополнительный доход, но не знает, с чего начать</h3><p>Разберёмся с нуля: что такое партнёрка и за что на самом деле платят.</p><span class="tap">☝</span></article>
+      <article class="acard tilt reveal"><h3>Кто пробовал партнёрки, но «не зашло»</h3><p>Часто проблема не в ссылке, а в связке: оффер, аудитория, источник, воронка.</p><span class="tap">☝</span></article>
+      <article class="acard tilt reveal"><h3>Кто не хочет бросать работу</h3><p>Начинаем с маленького теста в свободное время, а не с прыжка в неизвестность.</p><span class="tap">☝</span></article>
+      <article class="acard photo tilt reveal"><h3>Блогеры и владельцы каналов</h3><p>Монетизация аудитории честными банковскими офферами.</p><img src="assets/portrait-cut.webp" alt="" loading="lazy"><span class="tap">☝</span></article>
+      <article class="acard blue tilt reveal"><h3>Кто хочет работать с рекламой и трафиком</h3><p>Бесплатный и платный трафик, таргет, контекст и расчёт окупаемости.</p><span class="tap">☝</span></article>
+      <article class="acard tilt reveal"><h3>Предприниматели, агенты и финансисты</h3><p>Кто понимает банковские продукты и хочет выстроить из этого систему.</p><span class="tap">☝</span></article>
+    </div>
+  </div>
+</section>
+
+<!-- FREE MODULE -->
+<section id="free" style="padding-top:20px">
+  <div class="wrap">
+    <h2 class="title reveal"><em>Бесплатный</em><br>модуль · 5 уроков</h2>
+    <p class="sub reveal">Любой может познакомиться с партнёрскими программами и понять, как заработать первые деньги.</p>
+
+    <div class="stack">
+      <div class="tab open reveal">
+        <button class="tab-head" aria-expanded="true"><span class="num">Урок 1</span><span class="name">Что такое партнёрская программа</span><span class="plus">+</span></button>
+        <div class="tab-body"><div><div class="tab-inner"><div class="meta"><span>Бесплатно</span></div>
+          <div class="box"><ul><li>Компания, партнёр и оффер — как устроена механика</li><li>За что платят: целевое и подтверждённое действие</li><li>Почему клик ещё не равен заработку</li><li>Главное правило: сначала условия — потом трафик</li></ul></div></div></div></div>
       </div>
-      <p class="lead reveal">Что такое партнёрская программа, за что на самом деле платят и как получить первые деньги — без резких шагов и бросания работы.</p>
+      <div class="tab reveal">
+        <button class="tab-head" aria-expanded="false"><span class="num">Урок 2</span><span class="name">Какие бывают партнёрские программы</span><span class="plus">+</span></button>
+        <div class="tab-body"><div><div class="tab-inner"><div class="meta"><span>Бесплатно</span></div>
+          <div class="box"><ul><li>Прямые программы банков</li><li>CPA-сети и агрегаторы</li><li>Реферальные модели</li><li>Как выбрать: продукт + аудитория + источник + экономика</li></ul></div></div></div></div>
+      </div>
+      <div class="tab reveal">
+        <button class="tab-head" aria-expanded="false"><span class="num">Урок 3</span><span class="name">Как работает партнёрская ссылка</span><span class="plus">+</span></button>
+        <div class="tab-body"><div><div class="tab-inner"><div class="meta"><span>Бесплатно</span></div>
+          <div class="box"><ul><li>Как система понимает, от кого пришёл клиент</li><li>Путь клиента: переход → заявка → проверка → выплата</li><li>Почему результат могут не засчитать</li><li>Где смотреть статистику и статусы</li></ul></div></div></div></div>
+      </div>
+      <div class="tab reveal">
+        <button class="tab-head" aria-expanded="false"><span class="num">Урок 4</span><span class="name">Где искать клиентов</span><span class="plus">+</span></button>
+        <div class="tab-body"><div><div class="tab-inner"><div class="meta"><span>Бесплатно</span></div>
+          <div class="box"><ul><li>Карта бесплатного трафика</li><li>Платный трафик и когда он оправдан</li><li>Поисковый спрос</li><li>Оффер → аудитория → источник</li></ul></div></div></div></div>
+      </div>
+      <div class="tab reveal">
+        <button class="tab-head" aria-expanded="false"><span class="num">Урок 5</span><span class="name">Как начать без резкого перехода</span><span class="plus">+</span></button>
+        <div class="tab-body"><div><div class="tab-inner"><div class="meta"><span>Бесплатно</span></div>
+          <div class="box"><ul><li>Почему не нужно бросать работу</li><li>Первый тест: один оффер + один источник</li><li>Повторить, улучшить, выстроить систему</li><li>Ваш план на первые 30 дней</li></ul></div></div></div></div>
+      </div>
     </div>
-    <div class="lessons">
-      <article class="card lesson tilt reveal"><div class="lesson-num">01 <em>free</em></div><h3>Что такое партнёрская программа</h3><p>Компания, партнёр, оффер — и почему клик ещё не равен заработку.</p></article>
-      <article class="card lesson tilt reveal"><div class="lesson-num">02 <em>free</em></div><h3>Какие бывают партнёрки</h3><p>Прямые программы, CPA-сети, агрегаторы и реферальные модели.</p></article>
-      <article class="card lesson tilt reveal"><div class="lesson-num">03 <em>free</em></div><h3>Как работает партнёрская ссылка</h3><p>Путь клиента от перехода до подтверждения и выплаты.</p></article>
-      <article class="card lesson tilt reveal"><div class="lesson-num">04 <em>free</em></div><h3>Где искать клиентов</h3><p>Карта бесплатного и платного трафика. Оффер → аудитория → источник.</p></article>
-      <article class="card lesson tilt reveal"><div class="lesson-num">05 <em>free</em></div><h3>Как начать без резкого перехода</h3><p>Первый маленький тест как дополнительный доход — и путь к системе.</p></article>
-    </div>
-    <div class="free-cta reveal">
-      <p>Откройте Модуль 1 прямо сейчас — доступ бесплатный, оплата не нужна.</p>
-      <button class="btn btn-primary magnetic" data-open-modal><span>Получить 5 уроков</span> <span class="arrow">→</span></button>
-    </div>
+    <div class="after-stack reveal"><button class="btn btn-blue magnetic" data-open-modal><span>Получить 5 уроков бесплатно</span></button></div>
   </div>
 </section>
 
 <!-- PRINCIPLE -->
-<section class="principle">
-  <div class="wrap principle-grid">
-    <div>
-      <div class="eyebrow reveal">Главное правило</div>
-      <h2 class="reveal" style="margin-top:14px">Сначала <em>условия</em> —<br>потом трафик</h2>
-      <p class="reveal" style="opacity:.75;margin-top:22px;max-width:460px">Не ищем клиентов, пока не знаем, кому нужен продукт, за что платят и какой трафик разрешён. Так мы не тратим деньги на то, что не будет засчитано.</p>
-    </div>
-    <div class="steps">
-      <div class="step reveal"><b>1</b><div>Один оффер + один источник<span>небольшой тест, чтобы понять связку</span></div></div>
-      <div class="step reveal"><b>2</b><div>Повторить и улучшить<span>разбираем, что дало результат</span></div></div>
-      <div class="step reveal"><b>3</b><div>Своя система и объём<span>масштабируем только доказанную экономику</span></div></div>
+<section style="padding-top:20px">
+  <div class="wrap">
+    <div class="band reveal">
+      <div class="big">Сначала <em>условия</em> — потом трафик</div>
+      <div class="steps">
+        <div class="step"><b>01</b><div><strong>Тест</strong><span>Один оффер + один источник + небольшой бюджет или время</span></div></div>
+        <div class="step"><b>02</b><div><strong>Повтор</strong><span>Разбираем, что дало результат, и улучшаем</span></div></div>
+        <div class="step"><b>03</b><div><strong>Система</strong><span>Масштабируем только подтверждённую экономику</span></div></div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- PROGRAM -->
-<section id="program">
+<section id="program" style="padding-top:40px">
   <div class="wrap">
-    <div class="eyebrow reveal">Полный курс</div>
-    <h2 class="h2 reveal">Платная программа</h2>
-    <p class="lead reveal">Всё, что нужно, чтобы пройти путь от выбора оффера до измеримого теста и масштабирования — с практикой на реальных программах.</p>
+    <h2 class="title reveal"><em>Программа</em><br>полного курса</h2>
+    <p class="sub reveal">Полное обучение всем процессам партнёрской работы — от выбора оффера до собственной системы.</p>
 
-    <div class="program-grid">
-      <article class="card module m-a tilt reveal">
-        <div class="module-top"><span class="module-tag">Модуль 2 · 10 уроков</span>
-          <span class="module-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2"/><path d="M9 7h6"/></svg></span></div>
-        <h3>База партнёрского маркетинга</h3>
-        <p>Роли на рынке, как читать оффер, модели оплаты, воронка и экономика ещё до запуска.</p>
-        <div class="tags"><span>Паспорт оффера</span><span>CPL · CPA · CPS</span><span>Hold</span><span>Экономика</span></div>
-      </article>
-
-      <article class="card module m-b feature tilt reveal">
-        <div class="module-top"><span class="module-tag">Модуль 3 · 10 уроков</span>
-          <span class="module-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg></span></div>
-        <h3>Трафик и реклама</h3>
-        <p>Бесплатный и платный трафик: соцсети и мессенджеры, контент на месяц, объявления, чат-боты, таргет и контекстная реклама.</p>
-        <div class="tags"><span>Соцсети</span><span>Мессенджеры</span><span>Чат-бот</span><span>Таргет</span><span>Контекст</span><span>30-дневный тест</span></div>
-      </article>
-
-      <article class="card module m-c tilt reveal">
-        <div class="module-top"><span class="module-tag">Модуль 4 · практика</span>
-          <span class="module-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/></svg></span></div>
-        <h3>Прямые партнёрства с банками</h3>
-        <p>Регистрация, кабинет, разбор оффера, ссылка, первый тест и статусы — на реальных программах, шаг за шагом.</p>
-      </article>
-
-      <article class="card module m-d tilt reveal">
-        <div class="module-top"><span class="module-tag">Модуль 4 · практика</span>
-          <span class="module-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="6" r="2"/><circle cx="20" cy="6" r="2"/><circle cx="4" cy="18" r="2"/><circle cx="20" cy="18" r="2"/><path d="M6 7l4 3M18 7l-4 3M6 17l4-3M18 17l-4-3"/></svg></span></div>
-        <h3>Сервисы-посредники</h3>
-        <p>Федеральные партнёрские платформы и агрегаторы, которые работают сразу со многими банками.</p>
-      </article>
-
-      <article class="card module m-e tilt reveal">
-        <div class="module-top"><span class="module-tag">Модуль 5 · дополнительно</span>
-          <span class="module-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span></div>
-        <h3>Рост и система</h3>
-        <div class="tags"><span>Воронки и конверсия</span><span>Антифрод</span><span>Право и налоги</span><span>Аналитика</span><span>Масштабирование</span></div>
-      </article>
-    </div>
-
-    <div class="free-cta reveal" style="margin-top:16px">
-      <p>🎓 Финальный проект: ваш собственный оффер, аудитория, источник, воронка и таблица аналитики — с решением, что усилить на следующие 30 дней.</p>
-      <button class="btn btn-ghost magnetic" data-open-modal><span>Начать с бесплатного</span> <span class="arrow">→</span></button>
+    <div class="stack">
+      <div class="tab reveal">
+        <button class="tab-head" aria-expanded="false"><span class="num">Модуль 2</span><span class="name">База партнёрского маркетинга</span><span class="plus">+</span></button>
+        <div class="tab-body"><div><div class="tab-inner"><div class="meta"><span>10 уроков</span></div>
+          <div class="box"><p>Роли на рынке, как читать оффер, модели оплаты, виды трафика, воронка и экономика — ещё до запуска.</p><div class="tag-row"><span>Вебмастер и арбитраж</span><span>Паспорт оффера</span><span>CPL · CPA · CPS</span><span>Экономика</span></div></div></div></div></div>
+      </div>
+      <div class="tab open reveal">
+        <button class="tab-head" aria-expanded="true"><span class="num">Модуль 3</span><span class="name">Трафик и реклама</span><span class="plus">+</span></button>
+        <div class="tab-body"><div><div class="tab-inner"><div class="meta"><span>10 уроков</span></div>
+          <div class="box"><p>Бесплатный и платный трафик: где искать клиента, контент на месяц, объявления, чат-боты, таргетированная и контекстная реклама.</p><div class="tag-row"><span>Соцсети</span><span>Мессенджеры</span><span>Чат-бот</span><span>Таргет</span><span>Контекст</span><span>30-дневный тест</span></div></div></div></div></div>
+      </div>
+      <div class="tab reveal">
+        <button class="tab-head" aria-expanded="false"><span class="num">Модуль 4</span><span class="name">Практика: прямые партнёрства с банками и партнёрские сервисы</span><span class="plus">+</span></button>
+        <div class="tab-body"><div><div class="tab-inner"><div class="meta"><span>Практика</span></div>
+          <div class="box"><p>Шаг за шагом на реальных программах: регистрация, кабинет, разбор оффера, ссылка, первый тест и статусы.</p><div class="tag-row"><span>Прямое партнёрство с банками</span><span>Федеральные сервисы-посредники</span><span>Партнёрские платформы</span></div></div></div></div></div>
+      </div>
+      <div class="tab reveal">
+        <button class="tab-head" aria-expanded="false"><span class="num">Модуль 5</span><span class="name">Рост и система</span><span class="plus">+</span></button>
+        <div class="tab-body"><div><div class="tab-inner"><div class="meta"><span>Дополнительно</span></div>
+          <div class="box"><p>Всё, что превращает тесты в устойчивый доход.</p><div class="tag-row"><span>Воронки и конверсия</span><span>Антифрод и качество</span><span>Право, реклама и налоги</span><span>Аналитика</span><span>Масштабирование</span></div></div></div></div></div>
+      </div>
+      <div class="tab dark reveal">
+        <button class="tab-head" aria-expanded="false"><span class="num">Финал</span><span class="name">Собственный проект</span><span class="plus">+</span></button>
+        <div class="tab-body"><div><div class="tab-inner"><div class="meta"><span>Итог курса</span></div>
+          <div class="box"><p>Ваш оффер, аудитория, источник, воронка и таблица аналитики — с решением, что усилить, и планом на следующие 30 дней.</p></div></div></div></div>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ABOUT -->
 <section id="about" style="padding-top:40px">
-  <div class="wrap about-grid">
-    <div>
-      <div class="eyebrow reveal">Об авторе</div>
-      <p class="quote reveal" style="margin-top:22px">Я не начинала с мысли «найду волшебную схему и уйду с работы». Партнёрки — это не ссылка, а целая система.</p>
+  <div class="wrap">
+    <h2 class="title reveal"><em>Об</em> авторе</h2>
+    <div class="about">
+      <div class="q reveal">
+        <small>Почему мне можно доверять</small>
+        <p>«Я не начинала с мысли: найду волшебную схему и уйду с работы. Партнёрки — это не ссылка, а целая система: оффер, клиент, источник, воронка, действие и выплата.»</p>
+      </div>
+      <div class="facts">
+        <div class="fact reveal"><b>Банк</b><span>Опыт работы в банке — понимаю продукты изнутри</span></div>
+        <div class="fact reveal"><b>1→3</b><span>Прошла путь от доп. дохода к системе сама</span></div>
+        <div class="fact reveal"><b>100%</b><span>Только разрешённый трафик и честные методы</span></div>
+        <div class="fact reveal"><b>Live</b><span>Показываю каждый шаг на экране</span></div>
+      </div>
     </div>
-    <ul class="about-points">
-      <li class="reveal">Опыт работы в банке — понимаю продукты изнутри и знаю, кому они действительно нужны.</li>
-      <li class="reveal">Начинала с партнёрских предложений как с дополнительного направления, а не с прыжка в неизвестность.</li>
-      <li class="reveal">Учу работать честно: разрешённый трафик, реальные клиенты, решения по цифрам.</li>
-      <li class="reveal">Показываю всё на экране — ваша задача повторить шаги самостоятельно.</li>
-    </ul>
   </div>
 </section>
 
 <!-- PLANS -->
 <section id="plans" style="padding-top:40px">
   <div class="wrap">
-    <div class="eyebrow reveal">Формат</div>
-    <h2 class="h2 reveal">Начните бесплатно,<br>продолжите, когда будете готовы</h2>
+    <h2 class="title reveal"><em>Тарифы</em></h2>
     <div class="plans">
-      <article class="card plan tilt reveal">
+      <article class="plan free tilt reveal">
         <h3>Старт</h3>
-        <div class="price">0 ₽ <small>навсегда</small></div>
-        <ul>
-          <li>5 уроков Модуля 1</li>
-          <li>Задания на закрепление после каждого урока</li>
-          <li>План первого маленького теста</li>
-        </ul>
-        <button class="btn btn-primary magnetic" data-open-modal><span>Смотреть бесплатно</span> <span class="arrow">→</span></button>
+        <div class="price">0 ₽ <small>бесплатно</small></div>
+        <ul><li>5 уроков первого модуля</li><li>Задания на закрепление</li><li>План первого теста</li></ul>
+        <button class="btn btn-ink magnetic" data-open-modal><span>Смотреть бесплатно</span></button>
       </article>
-      <article class="card plan pro tilt reveal">
+      <article class="plan pro tilt reveal">
         <h3>Полный курс</h3>
         <div class="price">— ₽ <small>цена уточняется</small></div>
-        <ul>
-          <li>База, трафик и реклама — 20 уроков</li>
-          <li>Практика: прямые партнёрства с банками и сервисы-посредники</li>
-          <li>Воронки, антифрод, право и налоги, аналитика</li>
-          <li>Масштабирование и финальный проект</li>
-        </ul>
-        <button class="btn btn-primary magnetic" data-open-modal><span>Оставить заявку</span> <span class="arrow">→</span></button>
+        <ul><li>База и трафик — 20 уроков</li><li>Практика с банками и партнёрскими сервисами</li><li>Воронки, антифрод, право, аналитика</li><li>Масштабирование и финальный проект</li></ul>
+        <button class="btn btn-lime magnetic" data-open-modal><span>Оставить заявку</span></button>
       </article>
     </div>
   </div>
@@ -447,27 +461,26 @@ footer{padding:40px 0 60px;color:var(--muted);font-size:14px;border-top:1px soli
 <!-- FAQ -->
 <section id="faq" style="padding-top:40px">
   <div class="wrap">
-    <div style="text-align:center">
-      <div class="eyebrow reveal">Вопросы</div>
-      <h2 class="h2 reveal">Частые вопросы</h2>
-    </div>
+    <h2 class="title reveal"><em>Частые</em> вопросы</h2>
     <div class="faq">
       <details class="reveal"><summary>Нужен ли опыт или большая аудитория?</summary><p>Нет. Партнёром делает не размер аудитории, а способ работы и соблюдение условий. Бесплатный модуль начинается с самых основ.</p></details>
-      <details class="reveal"><summary>Нужно ли увольняться с работы?</summary><p>Нет. Мы начинаем с маленького теста как дополнительного направления и увеличиваем объём только после того, как экономика подтверждена цифрами.</p></details>
-      <details class="reveal"><summary>Можно ли начать без бюджета на рекламу?</summary><p>Да. В курсе есть отдельная методика бесплатного трафика. Бесплатный — не значит без затрат: вы вкладываете время, контент и регулярность.</p></details>
-      <details class="reveal"><summary>Вы гарантируете доход?</summary><p>Нет — и честно об этом говорим. Результат курса — умение самостоятельно пройти путь от оффера до измеримого теста и принять решение по данным.</p></details>
-      <details class="reveal"><summary>Что будет после бесплатных уроков?</summary><p>Вы сможете перейти к полному курсу: база, трафик и реклама, практика на реальных партнёрских программах банков и дополнительные модули.</p></details>
+      <details class="reveal"><summary>Нужно ли увольняться с работы?</summary><p>Нет. Начинаем с маленького теста как дополнительного направления и увеличиваем объём, только когда экономика подтверждена цифрами.</p></details>
+      <details class="reveal"><summary>Можно начать без бюджета на рекламу?</summary><p>Да. В курсе есть методика бесплатного трафика. Бесплатный — не значит без затрат: вы вкладываете время, контент и регулярность.</p></details>
+      <details class="reveal"><summary>Вы гарантируете доход?</summary><p>Нет — и честно об этом говорим. Результат курса — умение самостоятельно пройти путь от оффера до измеримого теста и принимать решения по данным.</p></details>
+      <details class="reveal"><summary>Что после бесплатных уроков?</summary><p>Переход к полному курсу: база, трафик и реклама, практика на реальных партнёрских программах и дополнительные модули.</p></details>
     </div>
   </div>
 </section>
 
 <!-- FINAL -->
-<section class="final">
+<section style="padding-top:20px;padding-bottom:40px">
   <div class="wrap">
-    <div class="final-box reveal">
-      <h2>Первые 5 уроков — уже сегодня</h2>
+    <div class="final-card reveal">
+      <div class="big">Первые 5 уроков<br><span style="color:var(--lime)">уже сегодня</span></div>
       <p>Поймите механику партнёрских программ и составьте свой первый маленький тест.</p>
-      <button class="btn btn-primary magnetic" data-open-modal><span>Начать бесплатно</span> <span class="badge-free">free</span></button>
+      <button class="btn btn-lime magnetic" data-open-modal><span>Начать бесплатно</span></button>
+      <div class="coin" aria-hidden="true">₽</div>
+      <div class="coin c2" aria-hidden="true">%</div>
     </div>
   </div>
 </section>
@@ -476,8 +489,8 @@ footer{padding:40px 0 60px;color:var(--muted);font-size:14px;border-top:1px soli
 
 <footer>
   <div class="wrap foot">
-    <div class="logo"><span class="logo-mark">₽</span>Банковские партнёрки</div>
-    <p class="disclaimer">Материалы курса носят образовательный характер и не являются гарантией дохода. Условия партнёрских программ проверяйте в их актуальных официальных правилах.</p>
+    <span class="pill lime">БАНК_ПАРТНЁРКИ</span>
+    <p>Материалы курса носят образовательный характер и не являются гарантией дохода. Условия партнёрских программ проверяйте в их актуальных официальных правилах.</p>
   </div>
 </footer>
 
@@ -486,14 +499,14 @@ footer{padding:40px 0 60px;color:var(--muted);font-size:14px;border-top:1px soli
   <div class="modal-box">
     <button class="modal-close" data-close aria-label="Закрыть">×</button>
     <form id="leadForm">
-      <h3 id="modalTitle">Доступ к 5 бесплатным урокам</h3>
-      <p>Оставьте контакт — пришлём ссылку на Модуль 1.</p>
+      <h3 id="modalTitle">5 уроков бесплатно</h3>
+      <p>Оставьте контакт — пришлём ссылку на первый модуль.</p>
       <label class="field">Имя<input name="name" required autocomplete="given-name" placeholder="Как к вам обращаться"></label>
       <label class="field">Telegram или телефон<input name="contact" required placeholder="@username"></label>
-      <label class="consent"><input type="checkbox" required> Согласна(ен) на обработку персональных данных</label>
-      <button class="btn btn-primary" type="submit"><span>Получить уроки</span> <span class="arrow">→</span></button>
+      <label class="consent"><input type="checkbox" required> Согласие на обработку персональных данных</label>
+      <button class="btn btn-blue" type="submit"><span>Получить уроки</span></button>
     </form>
-    <div class="success" id="success"><b>✨</b><h3>Готово!</h3><p>Ссылка на бесплатные уроки скоро придёт вам в сообщения.</p></div>
+    <div class="success" id="success"><div class="big">Готово!</div><p>Ссылка на бесплатные уроки скоро придёт вам в сообщения.</p></div>
   </div>
 </div>
 
@@ -502,35 +515,29 @@ footer{padding:40px 0 60px;color:var(--muted);font-size:14px;border-top:1px soli
   const fine = matchMedia('(pointer:fine)').matches;
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // theme toggle (remembered per viewer)
-  const root = document.documentElement;
-  try { const t = localStorage.getItem('theme'); if (t) root.dataset.theme = t; } catch (e) {}
-  document.getElementById('themeBtn').addEventListener('click', () => {
-    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-    root.dataset.theme = dark ? 'light' : 'dark';
-    try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
-  });
-
   // reveal on scroll
   const io = new IntersectionObserver(es => es.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-  }), { threshold: .12 });
+  }), { threshold: .1 });
   document.querySelectorAll('.reveal').forEach((el, i) => {
-    el.style.transitionDelay = (i % 5) * 70 + 'ms';
+    el.style.transitionDelay = (i % 4) * 80 + 'ms';
     io.observe(el);
   });
 
+  // stacked accordion: one open tab per stack
+  document.querySelectorAll('.stack').forEach(stack => {
+    stack.querySelectorAll('.tab-head').forEach(h => h.addEventListener('click', () => {
+      const tab = h.parentElement, wasOpen = tab.classList.contains('open');
+      stack.querySelectorAll('.tab').forEach(t => { t.classList.remove('open'); t.querySelector('.tab-head').setAttribute('aria-expanded', 'false'); });
+      if (!wasOpen) { tab.classList.add('open'); h.setAttribute('aria-expanded', 'true'); }
+    }));
+  });
+
   if (fine && !still) {
-    // cursor light + dot
-    const light = document.querySelector('.cursor-light'), dot = document.querySelector('.cursor-dot');
-    let mx = innerWidth / 2, my = innerHeight / 2, lx = mx, ly = my;
-    addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx + 'px'; dot.style.top = my + 'px'; });
-    (function loop() {
-      lx += (mx - lx) * .08; ly += (my - ly) * .08;
-      light.style.left = lx + 'px'; light.style.top = ly + 'px';
-      requestAnimationFrame(loop);
-    })();
-    document.querySelectorAll('a, button, summary').forEach(el => {
+    // cursor dot grows over interactive elements
+    const dot = document.querySelector('.cursor');
+    addEventListener('mousemove', e => { dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px'; });
+    document.querySelectorAll('a, button, summary, .acard').forEach(el => {
       el.addEventListener('mouseenter', () => dot.classList.add('big'));
       el.addEventListener('mouseleave', () => dot.classList.remove('big'));
     });
@@ -549,23 +556,25 @@ footer{padding:40px 0 60px;color:var(--muted);font-size:14px;border-top:1px soli
       });
     });
 
-    // cards: soft tilt + glow following the cursor
+    // cards tilt toward the cursor
     document.querySelectorAll('.tilt').forEach(c => {
       c.addEventListener('mousemove', e => {
         const r = c.getBoundingClientRect();
         const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
-        c.style.setProperty('--mx', px * 100 + '%'); c.style.setProperty('--my', py * 100 + '%');
-        c.style.transform = `perspective(900px) rotateX(${(.5 - py) * 5}deg) rotateY(${(px - .5) * 5}deg) translateY(-4px)`;
+        c.style.transform = `perspective(900px) rotateX(${(.5 - py) * 6}deg) rotateY(${(px - .5) * 6}deg) translateY(-4px)`;
       });
       c.addEventListener('mouseleave', () => c.style.transform = '');
     });
 
-    // portrait parallax: photo turns slightly toward the cursor
-    const p = document.getElementById('portrait');
-    addEventListener('mousemove', e => {
-      const x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
-      p.style.transform = `perspective(1200px) rotateY(${x * 6}deg) rotateX(${-y * 4}deg)`;
+    // hero: photo and coins shift with the cursor at different depths
+    const hero = document.getElementById('hero'), photo = document.getElementById('heroPhoto'), coins = hero.querySelectorAll('.coin');
+    hero.addEventListener('mousemove', e => {
+      const r = hero.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      if (innerWidth > 980) photo.style.transform = `translateX(calc(-50% + ${x * 18}px)) translateY(${y * 8}px)`;
+      coins.forEach((c, i) => c.style.translate = `${x * (i ? -40 : 30)}px ${y * (i ? -30 : 24)}px`);
     });
+    hero.addEventListener('mouseleave', () => { photo.style.transform = ''; coins.forEach(c => c.style.translate = ''); });
   }
 
   // modal
