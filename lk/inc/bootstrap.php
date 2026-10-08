@@ -58,7 +58,8 @@ function migrate(PDO $pdo): void {
     $pdo->exec(<<<SQL
     CREATE TABLE IF NOT EXISTS users(
         id INTEGER PRIMARY KEY, email TEXT UNIQUE NOT NULL, name TEXT NOT NULL,
-        password_hash TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'student', created_at TEXT NOT NULL);
+        password_hash TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'student', created_at TEXT NOT NULL,
+        consent_at TEXT);
     CREATE TABLE IF NOT EXISTS modules(
         id INTEGER PRIMARY KEY, position INTEGER NOT NULL, title TEXT NOT NULL, subtitle TEXT NOT NULL DEFAULT '',
         is_free INTEGER NOT NULL DEFAULT 0, price_label TEXT NOT NULL DEFAULT '', pay_url TEXT NOT NULL DEFAULT '');
@@ -103,6 +104,9 @@ function migrate(PDO $pdo): void {
     CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value TEXT NOT NULL);
     SQL);
 
+    $userCols = array_column($pdo->query('PRAGMA table_info(users)')->fetchAll(), 'name');
+    if (!in_array('consent_at', $userCols, true)) $pdo->exec('ALTER TABLE users ADD COLUMN consent_at TEXT');
+
     if ((int)$pdo->query('SELECT COUNT(*) FROM modules')->fetchColumn() === 0) seed_course($pdo);
 }
 
@@ -111,7 +115,7 @@ function seed_course(PDO $pdo): void {
     $pdo->beginTransaction();
     foreach ($data as $mi => $m) {
         $pdo->prepare('INSERT INTO modules(position,title,subtitle,is_free,price_label) VALUES(?,?,?,?,?)')
-            ->execute([$mi + 1, $m['title'], $m['subtitle'], $m['free'] ? 1 : 0, $m['free'] ? '' : 'Цена уточняется']);
+            ->execute([$mi + 1, $m['title'], $m['subtitle'], $m['free'] ? 1 : 0, '']);
         $mid = (int)$pdo->lastInsertId();
         foreach ($m['lessons'] as $li => $l) {
             $pdo->prepare('INSERT INTO lessons(module_id,position,title,body,homework_intro) VALUES(?,?,?,?,?)')
@@ -127,14 +131,51 @@ function seed_course(PDO $pdo): void {
         $pdo->prepare('INSERT INTO test_questions(position,text,type,options,correct) VALUES(?,?,?,?,?)')
             ->execute([$i + 1, $t['text'], $t['type'], json_encode($t['options'] ?? [], JSON_UNESCAPED_UNICODE), $t['correct'] ?? 0]);
     }
-    $defaults = ['pass_percent' => '70', 'sequential' => '1', 'pay_url' => '', 'pay_text' => 'После оплаты нажмите «Я оплатил(а)» — администратор откроет доступ.'];
+    seed_bonus_files($pdo);
+    $defaults = ['pass_percent' => '70', 'sequential' => '1', 'pay_url' => '',
+        'course_price' => '19 990 ₽', 'price_note' => 'Сегодня 0 ₽ — доступна рассрочка', 'pay_text' => 'После оплаты нажмите «Я оплатил(а)» — администратор откроет доступ.'];
     foreach ($defaults as $k => $v) $pdo->prepare('INSERT OR IGNORE INTO settings(key,value) VALUES(?,?)')->execute([$k, $v]);
     $pdo->commit();
+}
+
+/** Attach the bonus templates (lk/inc/bonus) to the lessons they belong to. */
+function seed_bonus_files(PDO $pdo): void {
+    $bonus = [
+        'Как читать оффер' => ['pasport-offera.xlsx', 'Паспорт оффера.xlsx', 'Бонус: шаблон паспорта оффера. Заполните его для выбранного оффера — это и есть часть домашнего задания.'],
+        'Аналитика до запуска' => ['tablica-analitiki.xlsx', 'Таблица аналитики.xlsx', 'Бонус: таблица аналитики. Вносите расход, клики, лиды и выплаты — CTR, CPL, CPA и прибыль считаются автоматически.'],
+        'Контент на месяц' => ['kontent-plan-30-dney.xlsx', 'Контент-план на 30 дней.xlsx', 'Бонус: контент-план на 30 дней. Подставьте свой сегмент и оффер, отмечайте готовые публикации.'],
+        'Первый 30-дневный тест' => ['chek-list-pervogo-testa.xlsx', 'Чек-лист первого теста.xlsx', 'Бонус: чек-лист первого теста — пройдите все шаги по порядку.'],
+    ];
+    foreach ($bonus as $lessonTitle => [$src, $name, $comment]) {
+        $lid = $pdo->prepare('SELECT id FROM lessons WHERE title=? LIMIT 1');
+        $lid->execute([$lessonTitle]);
+        $lid = $lid->fetchColumn();
+        $path = __DIR__ . '/bonus/' . $src;
+        if (!$lid || !is_file($path)) continue;
+        $stored = bin2hex(random_bytes(16));
+        if (!copy($path, STORAGE_DIR . '/files/' . $stored)) continue;
+        $pdo->prepare("INSERT INTO files(lesson_id,user_id,kind,stored_name,orig_name,mime,size,comment,created_at) VALUES(?,NULL,'material',?,?,?,?,?,?)")
+            ->execute([$lid, $stored, $name, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', filesize($path), $comment, now()]);
+    }
 }
 
 function setting(string $k, string $d = ''): string { return (string)(val('SELECT value FROM settings WHERE key=?', [$k]) ?? $d); }
 function set_setting(string $k, string $v): void { q('INSERT INTO settings(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value', [$k, $v]); }
 function now(): string { return date('Y-m-d H:i:s'); }
+
+/** A module without its own price is sold as part of the full course. */
+function sold_with_course(array $m): bool { return (int)$m['is_free'] === 0 && trim($m['price_label']) === ''; }
+function price_of(array $m): string { return sold_with_course($m) ? setting('course_price', '19 990 ₽') : $m['price_label']; }
+
+/** Grant access after payment: a full-course purchase opens every module sold with the course. */
+function grant_paid_access(int $userId, int $moduleId): void {
+    $m = one('SELECT * FROM modules WHERE id=?', [$moduleId]);
+    $ids = $m && sold_with_course($m)
+        ? array_column(array_filter(modules(), 'sold_with_course'), 'id')
+        : [$moduleId];
+    foreach ($ids as $id) q('INSERT OR IGNORE INTO access(user_id,module_id,granted_at) VALUES(?,?,?)', [$userId, $id, now()]);
+    q("UPDATE payment_requests SET status='approved' WHERE user_id=? AND status='new' AND module_id IN (" . implode(',', array_map('intval', $ids)) . ')', [$userId]);
+}
 
 /* ---------- csrf & flash ---------- */
 

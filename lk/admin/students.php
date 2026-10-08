@@ -9,7 +9,7 @@ if (is_post()) {
         case 'approve_req':
             $r = one('SELECT * FROM payment_requests WHERE id=?', [(int)post('req')]);
             if ($r) {
-                q('INSERT OR IGNORE INTO access(user_id,module_id,granted_at) VALUES(?,?,?)', [$r['user_id'], $r['module_id'], now()]);
+                grant_paid_access((int)$r['user_id'], (int)$r['module_id']);
                 q("UPDATE payment_requests SET status='approved' WHERE id=?", [$r['id']]);
                 flash('Доступ открыт.');
             }

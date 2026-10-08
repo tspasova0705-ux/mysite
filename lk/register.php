@@ -10,13 +10,15 @@ if (is_post()) {
     if (mb_strlen($name) < 2) $error = 'Укажите имя.';
     elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $error = 'Проверьте почту.';
     elseif (mb_strlen($pass) < 6) $error = 'Пароль — минимум 6 символов.';
-    elseif (empty($_POST['consent'])) $error = 'Нужно согласие на обработку персональных данных.';
+    elseif (empty($_POST['agree']) || empty($_POST['consent'])) $error = 'Отметьте согласие с документами — без него регистрация невозможна.';
     elseif (val('SELECT 1 FROM users WHERE email=?', [$email])) $error = 'Такая почта уже зарегистрирована — войдите.';
     else {
-        q("INSERT INTO users(email,name,password_hash,role,created_at) VALUES(?,?,?,'student',?)", [$email, $name, password_hash($pass, PASSWORD_DEFAULT), now()]);
+        q("INSERT INTO users(email,name,password_hash,role,created_at,consent_at) VALUES(?,?,?,'student',?,?)", [$email, $name, password_hash($pass, PASSWORD_DEFAULT), now(), now()]);
         login_user((int)db()->lastInsertId());
+        // came from "Купить курс" on the landing -> straight to payment
+        $paid = !empty($_POST['buy']) ? one('SELECT * FROM modules WHERE is_free=0 ORDER BY position, id LIMIT 1') : null;
         flash('Добро пожаловать! Первый модуль уже открыт.');
-        redirect('index.php');
+        redirect($paid ? 'pay.php?m=' . $paid['id'] : 'index.php');
     }
 }
 layout_head('Регистрация', '', true); ?>
@@ -30,9 +32,10 @@ layout_head('Регистрация', '', true); ?>
     <label class="field">Имя и фамилия<small>Так будет написано в сертификате</small><input type="text" name="name" required maxlength="80" autocomplete="name" value="<?= e(post('name')) ?>"></label>
     <label class="field">Почта<input type="email" name="email" required autocomplete="email" value="<?= e(post('email')) ?>"></label>
     <label class="field">Пароль<input type="password" name="password" required minlength="6" autocomplete="new-password"></label>
-    <label class="check"><input type="checkbox" name="consent" value="1" required> Согласие на обработку персональных данных</label>
+    <input type="hidden" name="buy" value="<?= !empty($_REQUEST['buy']) ? 1 : '' ?>">
+    <?php consent_checks(true); ?>
     <button class="btn btn-blue mt" type="submit">Открыть уроки</button>
-    <p class="auth-switch">Уже есть аккаунт? <a href="<?= url('login.php') ?>">Войти</a></p>
+    <p class="auth-switch">Уже есть аккаунт? <a href="<?= url('login.php' . (!empty($_REQUEST['buy']) ? '?buy=1' : '')) ?>">Войти</a></p>
   </form>
 </div>
 <?php layout_foot();

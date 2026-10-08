@@ -91,7 +91,7 @@ foreach ($mods as $i => $m):
       </div>
       <?php if (!$access): ?>
         <div class="mod-pay">
-          <div><b>Модуль откроется после оплаты</b><div class="small" style="opacity:.8"><?= e($m['price_label']) ?></div></div>
+          <div><b>Модуль откроется после оплаты</b><div class="small" style="opacity:.8"><?= sold_with_course($m) ? 'Полный курс ' . e(price_of($m)) . ' · ' . e(setting('price_note')) : e(price_of($m)) ?></div></div>
           <a class="btn btn-lime btn-sm" href="<?= url('pay.php?m=' . $m['id']) ?>">Открыть модуль</a>
         </div>
       <?php endif; ?>

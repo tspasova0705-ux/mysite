@@ -62,7 +62,7 @@ layout_head('Курс', 'course'); ?>
     <div class="row">
       <span class="disp" style="font-size:13px;color:var(--blue)">Модуль <?= $i + 1 ?></span>
       <h2 style="font-size:18px"><?= e($m['title']) ?></h2>
-      <?= $m['is_free'] ? '<span class="chip chip-free">Бесплатный</span>' : '<span class="chip chip-lock">Платный · ' . e($m['price_label'] ?: 'без цены') . '</span>' ?>
+      <?= $m['is_free'] ? '<span class="chip chip-free">Бесплатный</span>' : '<span class="chip chip-lock">Платный · ' . (sold_with_course($m) ? 'в составе курса' : e($m['price_label'])) . '</span>' ?>
     </div>
     <form method="post" class="row" style="gap:6px">
       <?= csrf_field() ?><input type="hidden" name="id" value="<?= $m['id'] ?>">
@@ -101,7 +101,7 @@ layout_head('Курс', 'course'); ?>
       <div class="grid2">
         <label class="field">Название<input type="text" name="title" value="<?= e($m['title']) ?>"></label>
         <label class="field">Подзаголовок<input type="text" name="subtitle" value="<?= e($m['subtitle']) ?>"></label>
-        <label class="field">Цена (как показывать)<input type="text" name="price_label" value="<?= e($m['price_label']) ?>" placeholder="например 9 900 ₽"></label>
+        <label class="field">Отдельная цена модуля<small>Пусто — модуль входит в полный курс (цена в настройках)</small><input type="text" name="price_label" value="<?= e($m['price_label']) ?>" placeholder="например 9 900 ₽"></label>
         <label class="field">Ссылка на оплату<small>Если пусто — общая ссылка из настроек</small><input type="url" name="pay_url" value="<?= e($m['pay_url']) ?>" placeholder="https://"></label>
       </div>
       <label class="check"><input type="checkbox" name="is_free" value="1" <?= $m['is_free'] ? 'checked' : '' ?>> Бесплатный модуль (открыт всем после регистрации)</label>
@@ -121,7 +121,7 @@ layout_head('Курс', 'course'); ?>
     <div class="grid2">
       <label class="field">Название<input type="text" name="title" required></label>
       <label class="field">Подзаголовок<input type="text" name="subtitle"></label>
-      <label class="field">Цена<input type="text" name="price_label" placeholder="например 9 900 ₽"></label>
+      <label class="field">Отдельная цена<small>Пусто — входит в полный курс</small><input type="text" name="price_label" placeholder="например 9 900 ₽"></label>
       <label class="field">Ссылка на оплату<input type="url" name="pay_url" placeholder="https://"></label>
     </div>
     <label class="check"><input type="checkbox" name="is_free" value="1"> Бесплатный</label>

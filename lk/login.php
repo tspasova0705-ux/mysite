@@ -7,12 +7,16 @@ $error = '';
 if (is_post()) {
     csrf_check();
     $u = one('SELECT * FROM users WHERE email=?', [mb_strtolower(post('email'))]);
-    if ($u && password_verify(post('password'), $u['password_hash'])) {
+    if (empty($_POST['agree'])) $error = 'Подтвердите согласие с пользовательским соглашением и офертой.';
+    elseif ($u && password_verify(post('password'), $u['password_hash'])) {
         login_user((int)$u['id']);
-        redirect($u['role'] === 'admin' ? 'admin/index.php' : 'index.php');
+        q('UPDATE users SET consent_at=COALESCE(consent_at, ?) WHERE id=?', [now(), $u['id']]);
+        $paid = !empty($_POST['buy']) && $u['role'] !== 'admin' ? one('SELECT * FROM modules WHERE is_free=0 ORDER BY position, id LIMIT 1') : null;
+        redirect($u['role'] === 'admin' ? 'admin/index.php' : ($paid ? 'pay.php?m=' . $paid['id'] : 'index.php'));
+    } else {
+        usleep(400000);
+        $error = 'Неверная почта или пароль.';
     }
-    usleep(400000);
-    $error = 'Неверная почта или пароль.';
 }
 layout_head('Вход', '', true); ?>
 <div class="auth">
@@ -24,8 +28,10 @@ layout_head('Вход', '', true); ?>
     <?php if ($error): ?><div class="flash flash-err"><?= e($error) ?></div><?php endif; ?>
     <label class="field">Почта<input type="email" name="email" required autocomplete="email" value="<?= e(post('email')) ?>"></label>
     <label class="field">Пароль<input type="password" name="password" required autocomplete="current-password"></label>
-    <button class="btn btn-blue" type="submit">Войти</button>
-    <p class="auth-switch">Ещё нет доступа? <a href="<?= url('register.php') ?>">Начать бесплатно</a></p>
+    <input type="hidden" name="buy" value="<?= !empty($_REQUEST['buy']) ? 1 : '' ?>">
+    <?php consent_checks(false); ?>
+    <button class="btn btn-blue mt" type="submit">Войти</button>
+    <p class="auth-switch">Ещё нет доступа? <a href="<?= url('register.php' . (!empty($_REQUEST['buy']) ? '?buy=1' : '')) ?>">Начать бесплатно</a></p>
     <p class="auth-switch" style="margin-top:6px">Забыли пароль? Напишите администратору — он сбросит его.</p>
   </form>
 </div>

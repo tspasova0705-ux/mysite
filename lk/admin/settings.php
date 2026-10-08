@@ -6,6 +6,8 @@ if (is_post()) {
     csrf_check();
     if (post('action') === 'settings') {
         set_setting('pay_url', post('pay_url'));
+        set_setting('course_price', post('course_price'));
+        set_setting('price_note', post('price_note'));
         set_setting('pay_text', post('pay_text'));
         set_setting('pass_percent', (string)max(1, min(100, (int)post('pass_percent'))));
         set_setting('sequential', isset($_POST['sequential']) ? '1' : '0');
@@ -24,7 +26,11 @@ layout_head('Настройки', 'settings'); ?>
   <form method="post" class="card">
     <?= csrf_field() ?><input type="hidden" name="action" value="settings">
     <h2>Курс и оплата</h2>
-    <label class="field mt">Общая ссылка на оплату<small>Используется, если у модуля нет своей ссылки</small><input type="url" name="pay_url" value="<?= e(setting('pay_url')) ?>" placeholder="https://"></label>
+    <div class="grid2 mt">
+      <label class="field">Цена полного курса<input type="text" name="course_price" value="<?= e(setting('course_price', '19 990 ₽')) ?>"></label>
+      <label class="field">Подпись к цене<input type="text" name="price_note" value="<?= e(setting('price_note')) ?>"></label>
+    </div>
+    <label class="field">Общая ссылка на оплату<small>Используется, если у модуля нет своей ссылки</small><input type="url" name="pay_url" value="<?= e(setting('pay_url')) ?>" placeholder="https://"></label>
     <label class="field">Текст на странице оплаты<textarea name="pay_text" style="min-height:80px"><?= e(setting('pay_text')) ?></textarea></label>
     <label class="field">Проходной балл итогового теста, %<input type="number" name="pass_percent" min="1" max="100" value="<?= e(setting('pass_percent', '70')) ?>"></label>
     <label class="check"><input type="checkbox" name="sequential" value="1" <?= setting('sequential', '1') === '1' ? 'checked' : '' ?>> Открывать следующий урок только после того, как домашнее задание предыдущего принято</label>

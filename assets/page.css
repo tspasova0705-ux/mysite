@@ -1,0 +1,25 @@
+@import url(fonts.css);
+:root{--bg:#f3f3f1;--card:#e9e9e6;--white:#fff;--ink:#121212;--muted:#5f5f5f;--blue:#2446d8;--lime:#e3f264;--line:rgba(18,18,18,.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:Manrope,system-ui,sans-serif;font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--blue)}
+.wrap{width:min(900px,100% - 32px);margin-inline:auto}
+.top{padding:14px 0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;padding:9px 16px;border-radius:999px;border:1.5px solid var(--ink);font-family:Unbounded,sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;text-decoration:none;color:var(--ink);white-space:nowrap}
+.pill.lime{background:var(--lime);border-color:var(--lime)}
+.pill:hover{background:var(--ink);color:#fff}
+.head{background:var(--blue);color:#fff;border-radius:32px;padding:40px;margin:8px 0 14px}
+.head h1{font-family:Unbounded,sans-serif;font-weight:800;text-transform:uppercase;font-size:clamp(24px,4vw,40px);line-height:1.05;letter-spacing:-.02em}
+.head p{opacity:.85;margin-top:12px}
+.doc{background:var(--white);border-radius:28px;padding:40px}
+.doc h2{font-family:Unbounded,sans-serif;font-weight:700;text-transform:uppercase;font-size:15px;letter-spacing:-.01em;margin:30px 0 10px}
+.doc h2:first-child{margin-top:0}
+.doc p,.doc li{margin-bottom:8px}
+.doc ul,.doc ol{padding-left:22px;margin-bottom:8px}
+.req{background:var(--lime);border-radius:22px;padding:24px;margin-top:28px}
+.req b{font-family:Unbounded,sans-serif;font-size:13px;text-transform:uppercase}
+.fill{background:#fff3b0;padding:0 4px;border-radius:4px}
+.toc{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+footer{padding:28px 0 40px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media (max-width:600px){.head,.doc{padding:24px 20px;border-radius:24px}}
+@media print{.top,.toc,footer{display:none}.head{color:#000;background:none;padding:0}.doc{padding:0}}

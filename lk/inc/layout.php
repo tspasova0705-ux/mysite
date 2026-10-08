@@ -9,9 +9,7 @@ function layout_head(string $title, string $active = '', bool $bare = false): vo
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title><?= e($title) ?> · <?= e(SITE_NAME) ?></title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="<?= e(BASE) ?>/../assets/fonts.css">
 <link rel="stylesheet" href="<?= url('assets/lk.css') ?>?v=1">
 </head>
 <body class="<?= $admin ? 'is-admin' : '' ?>">
@@ -48,7 +46,10 @@ function layout_head(string $title, string $active = '', bool $bare = false): vo
 
 function layout_foot(): void { ?>
 </main>
-<footer class="foot wrap"><span><?= e(SITE_NAME) ?> · <?= e(COURSE_NAME) ?></span><span>© <?= date('Y') ?></span></footer>
+<footer class="foot wrap">
+  <span><?= e(SITE_NAME) ?> · <?= e(OWNER_NAME) ?>, ИНН <?= e(OWNER_INN) ?></span>
+  <span class="foot-links"><?php foreach (LEGAL_DOCS as $file => $label): ?><a href="<?= e(BASE) ?>/../<?= $file ?>" target="_blank"><?= $label ?></a><?php endforeach; ?></span>
+</footer>
 <script src="<?= url('assets/lk.js') ?>?v=1"></script>
 </body>
 </html>
@@ -65,3 +66,12 @@ function auth_art(string $title, array $features): void { ?>
     <img src="<?= e(BASE) ?>/../assets/portrait-cut.webp" alt="">
   </div>
 <?php }
+
+/** Required consent checkboxes with links to the legal documents. */
+function consent_checks(bool $register): void {
+    $d = e(BASE) . '/../'; ?>
+    <label class="check"><input type="checkbox" name="agree" value="1" required> <span>Принимаю <a href="<?= $d ?>agreement.html" target="_blank">пользовательское соглашение</a> и <a href="<?= $d ?>offer.html" target="_blank">публичную оферту</a></span></label>
+    <?php if ($register): ?>
+    <label class="check" style="margin-top:10px"><input type="checkbox" name="consent" value="1" required> <span>Даю согласие на обработку персональных данных в соответствии с <a href="<?= $d ?>privacy.html" target="_blank">политикой конфиденциальности</a></span></label>
+    <?php endif;
+}
