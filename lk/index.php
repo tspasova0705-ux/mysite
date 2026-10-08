@@ -65,6 +65,9 @@ function upsell_block(string $payHref, bool $inModal): void { ?>
 <?php endif; ?>
 
 <?php if ($upsell) upsell_block($payHref, false); ?>
+<?php if ($user['role'] === 'admin'): ?>
+  <div class="flash flash-ok">Вы вошли как <b>администратор</b>, поэтому вам открыты все уроки и модули. Ученики видят только первый урок, а остальные открываются по мере проверки домашних заданий и после оплаты. Чтобы посмотреть кабинет глазами ученика, зарегистрируйтесь с другой почтой в окне «инкогнито».</div>
+<?php endif; ?>
 
 <section class="hello reveal">
   <div>
