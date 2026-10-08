@@ -1,0 +1,5 @@
+# Файлы и база доступны только через PHP (file.php проверяет доступ).
+Require all denied
+<IfModule !mod_authz_core.c>
+  Deny from all
+</IfModule>

@@ -269,7 +269,7 @@ footer{padding:34px 0 50px}
       <a href="#program" class="pill">Программа</a>
       <a href="#plans" class="pill">Тарифы</a>
     </nav>
-    <a href="#faq" class="pill lime hide-sm">Задать вопрос</a>
+    <a href="lk/login.php" class="pill lime">Войти</a>
   </div>
 </header>
 
@@ -494,22 +494,6 @@ footer{padding:34px 0 50px}
   </div>
 </footer>
 
-<!-- MODAL -->
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="modal-box">
-    <button class="modal-close" data-close aria-label="Закрыть">×</button>
-    <form id="leadForm">
-      <h3 id="modalTitle">5 уроков бесплатно</h3>
-      <p>Оставьте контакт — пришлём ссылку на первый модуль.</p>
-      <label class="field">Имя<input name="name" required autocomplete="given-name" placeholder="Как к вам обращаться"></label>
-      <label class="field">Telegram или телефон<input name="contact" required placeholder="@username"></label>
-      <label class="consent"><input type="checkbox" required> Согласие на обработку персональных данных</label>
-      <button class="btn btn-blue" type="submit"><span>Получить уроки</span></button>
-    </form>
-    <div class="success" id="success"><div class="big">Готово!</div><p>Ссылка на бесплатные уроки скоро придёт вам в сообщения.</p></div>
-  </div>
-</div>
-
 <script>
 (() => {
   const fine = matchMedia('(pointer:fine)').matches;
@@ -577,17 +561,8 @@ footer{padding:34px 0 50px}
     hero.addEventListener('mouseleave', () => { photo.style.transform = ''; coins.forEach(c => c.style.translate = ''); });
   }
 
-  // modal
-  const modal = document.getElementById('modal'), form = document.getElementById('leadForm'), ok = document.getElementById('success');
-  const open = () => { modal.classList.add('open'); form.style.display = ''; ok.style.display = 'none'; setTimeout(() => form.name.focus(), 50); };
-  const close = () => modal.classList.remove('open');
-  document.querySelectorAll('[data-open-modal]').forEach(b => b.addEventListener('click', open));
-  modal.addEventListener('click', e => { if (e.target === modal || e.target.closest('[data-close]')) close(); });
-  addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-  form.addEventListener('submit', e => {
-    e.preventDefault(); // demo: hook up to Telegram bot / CRM later
-    form.style.display = 'none'; ok.style.display = 'block'; form.reset();
-  });
+  // all "free lessons" buttons lead to registration in the personal cabinet
+  document.querySelectorAll('[data-open-modal]').forEach(b => b.addEventListener('click', () => { location.href = 'lk/register.php'; }));
 })();
 </script>
 </body>

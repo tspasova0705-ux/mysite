@@ -1,0 +1,7 @@
+# Данные кабинета (база, загруженные файлы) не храним в git
+lk/storage/data/*
+lk/storage/files/*
+!lk/storage/.htaccess
+
+!lk/storage/data/.keep
+!lk/storage/files/.keep
