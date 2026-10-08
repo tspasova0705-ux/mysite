@@ -340,3 +340,49 @@ details.box>div{padding-bottom:20px}
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
 .reveal.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}}
+
+/* pulsing call-to-action */
+.pulse{position:relative;animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(227,242,100,.75)}50%{box-shadow:0 0 0 14px rgba(227,242,100,0)}}
+.pulse:hover{animation-play-state:paused}
+
+/* upsell after the free module */
+.upsell{display:grid;grid-template-columns:1.1fr 1fr;gap:14px;background:var(--ink);color:var(--white);border-radius:36px;padding:14px;margin-bottom:14px}
+.upsell-text{padding:28px 26px}
+.upsell-badge{display:inline-flex;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.1);font-size:13px;font-weight:700}
+.upsell h2{font-size:clamp(28px,3.6vw,46px);color:var(--lime);margin:18px 0 14px}
+.upsell-text p{opacity:.88;font-size:17px;max-width:520px}
+.upsell-pay{background:var(--blue);border-radius:26px;padding:28px 26px;display:flex;flex-direction:column;gap:14px}
+.upsell-price{font-family:Unbounded,sans-serif;font-weight:900;font-size:clamp(30px,3.6vw,44px);color:var(--lime);line-height:1}
+.upsell-price span{display:block;font-family:Manrope,sans-serif;font-weight:700;font-size:13px;color:#fff;opacity:.75;text-transform:uppercase;letter-spacing:.05em;margin-top:6px}
+.upsell-pay p{font-size:15px;opacity:.92}
+.upsell-pay .btn{align-self:flex-start}
+.upsell-pay small{font-size:12px;opacity:.72;line-height:1.45}
+.upsell.in-modal{margin:0;border-radius:30px}
+@media (max-width:860px){.upsell{grid-template-columns:1fr;border-radius:28px;padding:10px}.upsell-text{padding:20px 16px}.upsell-pay{padding:22px 18px}.upsell-pay .btn{align-self:stretch}}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:200;display:none;place-items:center;padding:16px;background:rgba(18,18,18,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);overflow-y:auto}
+.modal.open{display:grid;animation:mfade .3s}
+.modal-box{position:relative;width:min(460px,100%);background:var(--white);border-radius:32px;padding:38px;animation:mpop .45s cubic-bezier(.2,.8,.2,1);overflow:hidden}
+.modal-box.wide{width:min(980px,100%);padding:0;background:transparent}
+.modal-close{position:absolute;right:16px;top:16px;z-index:3;width:40px;height:40px;border-radius:50%;border:0;background:var(--lime);font-size:22px;cursor:pointer;color:var(--ink)}
+@keyframes mfade{from{opacity:0}}
+@keyframes mpop{from{opacity:0;transform:translateY(18px) scale(.96)}}
+.celebrate{text-align:center}
+.celebrate h2{font-size:30px;margin:16px 0 10px;color:var(--blue)}
+.celebrate p{color:var(--muted);margin-bottom:24px}
+.celebrate-ic{width:84px;height:84px;margin:6px auto 0;border-radius:50%;background:var(--lime);display:grid;place-items:center;font-size:40px;font-weight:900;color:var(--blue);animation:pop2 .6s .2s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes pop2{from{transform:scale(0)}}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.confetti i{position:absolute;top:-12px;left:var(--x);width:9px;height:14px;border-radius:2px;background:var(--c);transform:rotate(var(--r));animation:fall 2.6s var(--d) ease-in forwards;opacity:0}
+.confetti i:nth-child(odd){width:7px;height:7px;border-radius:50%}
+@keyframes fall{0%{opacity:1;transform:translateY(0) rotate(var(--r))}100%{opacity:0;transform:translateY(520px) rotate(calc(var(--r) + 540deg))}}
+
+/* fail page */
+.oops{margin-top:20px;background:var(--blue);color:var(--white);border-radius:36px;padding:60px 24px;text-align:center}
+.oops-face{font-family:Unbounded,sans-serif;font-weight:900;font-size:64px;color:var(--lime);transform:rotate(90deg);display:inline-block;margin-bottom:10px;animation:wobble 2.4s ease-in-out infinite}
+@keyframes wobble{50%{transform:rotate(80deg)}}
+.oops h1{font-size:clamp(28px,4vw,48px);margin:10px 0 16px}
+.oops h1 span{color:var(--lime)}
+.oops p{opacity:.88;max-width:560px;margin:0 auto 28px}

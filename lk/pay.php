@@ -35,12 +35,13 @@ layout_head('Оплата', 'home'); ?>
     <h1 style="margin-top:22px"><?= $full ? e(COURSE_NAME) : e($m['title']) ?></h1>
     <p style="margin-top:12px;opacity:.85"><?= $full ? count($included) . ' ' . plural(count($included), 'модуль', 'модуля', 'модулей') . ', ' . $lessonCount . ' ' . plural($lessonCount, 'урок', 'урока', 'уроков') . ' с проверкой домашних заданий, итоговый тест и сертификат' : e($m['subtitle']) ?></p>
     <div class="price"><?= e(price_of($m)) ?></div>
-    <?php if ($full && setting('price_note')): ?><span class="chip chip-free" style="font-size:13px;padding:9px 14px;margin:-8px 0 22px"><?= e(setting('price_note')) ?></span><?php endif; ?>
+    <?php if ($full && setting('price_note')): ?><span class="chip chip-free" style="font-size:13px;padding:9px 14px;margin:-8px 0 14px"><?= e(setting('price_note')) ?></span>
+      <p class="small" style="opacity:.8;margin-bottom:22px">Рассрочка на 6 или 12 месяцев: <?= e(installment_hint()) ?> Точный график платежей покажет банк при оформлении.</p><?php endif; ?>
     <?php if ($request): ?>
       <div class="flash flash-ok" style="color:var(--ink)">Заявка отправлена <?= e(date('d.m.Y H:i', strtotime($request['created_at']))) ?>. Доступ откроется после проверки оплаты.</div>
     <?php else: ?>
       <div class="row">
-        <?php if ($payUrl): ?><a class="btn btn-lime" href="<?= e($payUrl) ?>" target="_blank" rel="noopener">Оплатить или оформить рассрочку</a>
+        <?php if ($payUrl): ?><a class="btn btn-lime pulse" href="<?= e($payUrl) ?>" target="_blank" rel="noopener">Перейти к оплате</a>
         <?php else: ?><span class="small" style="opacity:.85">Ссылка на оплату скоро появится.</span><?php endif; ?>
       </div>
       <p class="small" style="opacity:.75;margin-top:12px">Нажимая «Оплатить», вы принимаете условия <a href="<?= $legal ?>offer.html" target="_blank" style="color:var(--lime)">публичной оферты</a>.</p>

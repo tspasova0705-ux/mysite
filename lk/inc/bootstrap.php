@@ -133,6 +133,7 @@ function seed_course(PDO $pdo): void {
     }
     seed_bonus_files($pdo);
     $defaults = ['pass_percent' => '70', 'sequential' => '1', 'pay_url' => 'https://tatimarch.getplatinum.ru/payment/bULBnxH',
+        'success_key' => bin2hex(random_bytes(12)),
         'course_price' => '19 990 ₽', 'price_note' => 'Сегодня 0 ₽ — доступна рассрочка', 'pay_text' => 'После оплаты нажмите «Я оплатил(а)» — администратор откроет доступ.'];
     foreach ($defaults as $k => $v) $pdo->prepare('INSERT OR IGNORE INTO settings(key,value) VALUES(?,?)')->execute([$k, $v]);
     $pdo->commit();
@@ -166,6 +167,57 @@ function now(): string { return date('Y-m-d H:i:s'); }
 /** A module without its own price is sold as part of the full course. */
 function sold_with_course(array $m): bool { return (int)$m['is_free'] === 0 && trim($m['price_label']) === ''; }
 function price_of(array $m): string { return sold_with_course($m) ? setting('course_price', '19 990 ₽') : $m['price_label']; }
+
+/** Secret part of the GetPlatinum success URL; only a redirect carrying it opens the course automatically. */
+function success_key(): string {
+    $k = setting('success_key');
+    if ($k === '') { $k = bin2hex(random_bytes(12)); set_setting('success_key', $k); }
+    return $k;
+}
+function success_url(): string {
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    return $scheme . '://' . ($_SERVER['HTTP_HOST'] ?? 'partnerkabiz.ru') . url('success.php?k=' . success_key());
+}
+
+/** Free lessons are finished when every free lesson with homework is accepted. */
+function free_completed(array $user): bool {
+    $any = false;
+    foreach (course_lessons() as $l) {
+        if ((int)$l['is_free'] !== 1 || hw_count((int)$l['id']) === 0) continue;
+        $any = true;
+        if (!lesson_done((int)$user['id'], (int)$l['id'])) return false;
+    }
+    return $any;
+}
+function has_full_access(array $user): bool {
+    foreach (modules() as $m) if (sold_with_course($m) && !has_module_access($user, $m)) return false;
+    return true;
+}
+function first_paid_module(): ?array { return one('SELECT * FROM modules WHERE is_free=0 ORDER BY position, id LIMIT 1'); }
+
+/** Approximate monthly installment, e.g. "≈ 1 666 ₽/мес на 12 мес." (bank's schedule may differ). */
+function installment_hint(): string {
+    $sum = (int)preg_replace('~\D~', '', setting('course_price', '19 990 ₽'));
+    if ($sum <= 0) return '';
+    $f = fn(int $n) => '≈ ' . number_format((int)ceil($sum / $n), 0, '', ' ') . " ₽/мес на $n мес.";
+    return $f(12) . ' или ' . $f(6);
+}
+
+/** Open the course after a confirmed redirect from the payment service and remember it for the admin. */
+function apply_payment(int $userId): void {
+    $m = first_paid_module();
+    if (!$m) return;
+    grant_paid_access($userId, (int)$m['id']);
+    q("INSERT INTO payment_requests(user_id,module_id,note,status,created_at) VALUES(?,?,?,'auto',?)",
+        [$userId, $m['id'], 'Открыт автоматически после оплаты в GetPlatinum — сверьте платёж', now()]);
+    $_SESSION['celebrate'] = 1;
+}
+
+/** Payment confirmed while logged out: finish it right after login / registration. */
+function apply_pending_payment(int $userId): void {
+    if (!empty($_SESSION['paid_pending']) && time() - (int)$_SESSION['paid_pending'] < 6 * 3600) apply_payment($userId);
+    unset($_SESSION['paid_pending']);
+}
 
 /** Grant access after payment: a full-course purchase opens every module sold with the course. */
 function grant_paid_access(int $userId, int $moduleId): void {

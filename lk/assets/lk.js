@@ -18,6 +18,13 @@
     if (msg && !confirm(msg)) e.preventDefault();
   });
 
+  // modals: close by button, backdrop or Esc
+  const closeModal = m => m && m.classList.remove('open');
+  document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => {
+    if (e.target === m || e.target.closest('[data-close]')) closeModal(m);
+  }));
+  addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.modal.open').forEach(closeModal); });
+
   // admin review: "mark all as done"
   document.querySelectorAll('[data-mark-all]').forEach(b => b.addEventListener('click', () => {
     document.querySelectorAll(`input[type=radio][value="${b.dataset.markAll}"]`).forEach(r => r.checked = true);

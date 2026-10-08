@@ -12,6 +12,9 @@ if (is_post()) {
         set_setting('pass_percent', (string)max(1, min(100, (int)post('pass_percent'))));
         set_setting('sequential', isset($_POST['sequential']) ? '1' : '0');
         flash('Настройки сохранены.');
+    } elseif (post('action') === 'new_key') {
+        set_setting('success_key', bin2hex(random_bytes(12)));
+        flash('Создан новый адрес успешной оплаты — обновите его в GetPlatinum.');
     } elseif (post('action') === 'password') {
         if (!password_verify(post('old'), $me['password_hash'])) flash('Текущий пароль неверный.', 'err');
         elseif (mb_strlen(post('new')) < 8) flash('Новый пароль — минимум 8 символов.', 'err');
@@ -37,6 +40,15 @@ layout_head('Настройки', 'settings'); ?>
     <button class="btn btn-blue mt">Сохранить</button>
   </form>
   <div class="stack-sm">
+    <form method="post" class="card lime" data-confirm="Старый адрес перестанет открывать курс. Создать новый?">
+      <?= csrf_field() ?><input type="hidden" name="action" value="new_key">
+      <h2>GetPlatinum</h2>
+      <p class="small" style="margin:10px 0 14px">Вставьте эти адреса в настройках оплаты GetPlatinum. После успешной оплаты ученик вернётся в кабинет, и полный курс откроется автоматически.</p>
+      <label class="field">Success URL (успешная оплата)<input type="text" readonly value="<?= e(success_url()) ?>" onclick="this.select()"></label>
+      <label class="field">Fail URL (оплата не прошла)<input type="text" readonly value="<?= e(str_replace('success.php?k=' . success_key(), 'fail.php', success_url())) ?>" onclick="this.select()"></label>
+      <p class="small" style="margin-bottom:12px">Адрес успешной оплаты содержит секретный ключ — не публикуйте его. Если он утёк, создайте новый.</p>
+      <button class="btn btn-ink btn-sm">Создать новый адрес</button>
+    </form>
     <form method="post" class="card">
       <?= csrf_field() ?><input type="hidden" name="action" value="password">
       <h2>Пароль администратора</h2>

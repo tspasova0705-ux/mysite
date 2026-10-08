@@ -10,7 +10,7 @@ function layout_head(string $title, string $active = '', bool $bare = false): vo
 <meta name="robots" content="noindex">
 <title><?= e($title) ?> · <?= e(SITE_NAME) ?></title>
 <link rel="stylesheet" href="<?= e(BASE) ?>/../assets/fonts.css">
-<link rel="stylesheet" href="<?= url('assets/lk.css') ?>?v=1">
+<link rel="stylesheet" href="<?= url('assets/lk.css') ?>?v=2">
 </head>
 <body class="<?= $admin ? 'is-admin' : '' ?>">
 <?php if (!$bare): ?>
@@ -50,7 +50,7 @@ function layout_foot(): void { ?>
   <span><?= e(SITE_NAME) ?> · <?= e(OWNER_NAME) ?>, ИНН <?= e(OWNER_INN) ?></span>
   <span class="foot-links"><?php foreach (CHANNELS as $label => $href): ?><a href="<?= e($href) ?>" target="_blank" rel="noopener"><?= e($label) ?></a><?php endforeach; ?><?php foreach (LEGAL_DOCS as $file => $label): ?><a href="<?= e(BASE) ?>/../<?= $file ?>" target="_blank"><?= $label ?></a><?php endforeach; ?></span>
 </footer>
-<script src="<?= url('assets/lk.js') ?>?v=1"></script>
+<script src="<?= url('assets/lk.js') ?>?v=2"></script>
 </body>
 </html>
 <?php }

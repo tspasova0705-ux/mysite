@@ -16,7 +16,55 @@ foreach (course_lessons() as $l) {
 $pending = count(array_filter($states, fn($s) => $s === 'submitted'));
 $first = explode(' ', $user['name'])[0];
 
-layout_head('Мои уроки', 'home'); ?>
+// Free module finished but the course is not bought yet -> invite to pay (popup once per session).
+$upsell = $user['role'] === 'student' && free_completed($user) && !has_full_access($user);
+$upsellPopup = $upsell && empty($_SESSION['upsell_shown']);
+if ($upsellPopup) $_SESSION['upsell_shown'] = 1;
+$payHref = setting('pay_url') ?: (($pm = first_paid_module()) ? url('pay.php?m=' . $pm['id']) : '#');
+$celebrate = !empty($_SESSION['celebrate']);
+unset($_SESSION['celebrate']);
+
+layout_head('Мои уроки', 'home');
+
+/** Invitation to buy the full course after the free lessons. */
+function upsell_block(string $payHref, bool $inModal): void { ?>
+  <div class="upsell<?= $inModal ? ' in-modal' : ' reveal' ?>">
+    <div class="upsell-text">
+      <span class="upsell-badge">🎉 Бесплатный модуль пройден</span>
+      <h2>Поздравляем!</h2>
+      <p>Теперь ты знаешь, что такое партнёрские программы и как с их помощью можно зарабатывать. Предлагаю разобраться подробнее — и уже <b>в первый месяц</b> сделать результат на партнёрском сервисе.</p>
+    </div>
+    <div class="upsell-pay">
+      <div class="upsell-price"><?= e(setting('course_price', '19 990 ₽')) ?> <span>полный курс</span></div>
+      <p>Для тебя есть возможность оплатить в рассрочку: <b>сегодня ты платишь 0 ₽</b> — и у тебя есть целый месяц, чтобы заняться обучением.</p>
+      <a class="btn btn-lime pulse" href="<?= e($payHref) ?>" target="_blank" rel="noopener">Перейти к оплате →</a>
+      <small><?= e(installment_hint()) ?> Рассрочка на 6 или 12 месяцев через GetPlatinum, точный график платежей покажет банк при оформлении.</small>
+    </div>
+  </div>
+<?php }
+?>
+<?php if ($celebrate): ?>
+<div class="modal open" role="dialog" aria-modal="true" aria-label="Оплата прошла">
+  <div class="modal-box celebrate">
+    <div class="confetti" aria-hidden="true"><?php for ($i = 0; $i < 28; $i++): ?><i style="--x:<?= random_int(0, 100) ?>%;--d:<?= random_int(0, 1400) ?>ms;--r:<?= random_int(0, 360) ?>deg;--c:<?= ['#e3f264', '#2446d8', '#ffffff', '#1f8a5b'][$i % 4] ?>"></i><?php endfor; ?></div>
+    <button class="modal-close" data-close aria-label="Закрыть">×</button>
+    <div class="celebrate-ic">✓</div>
+    <h2>Поздравляем!</h2>
+    <p>Оплата прошла успешно. Полный курс открыт — можешь приступать к урокам обучения.</p>
+    <?php $firstPaid = null; foreach (course_lessons() as $l) { if (!(int)$l['is_free'] && can_view_lesson($user, $l)) { $firstPaid = $l; break; } } ?>
+    <a class="btn btn-blue" href="<?= url($firstPaid ? 'lesson.php?id=' . $firstPaid['id'] : 'index.php') ?>">Начать обучение →</a>
+  </div>
+</div>
+<?php elseif ($upsellPopup): ?>
+<div class="modal open" role="dialog" aria-modal="true" aria-label="Поздравляем">
+  <div class="modal-box wide">
+    <button class="modal-close" data-close aria-label="Закрыть">×</button>
+    <?php upsell_block($payHref, true); ?>
+  </div>
+</div>
+<?php endif; ?>
+
+<?php if ($upsell) upsell_block($payHref, false); ?>
 
 <section class="hello reveal">
   <div>
@@ -33,8 +81,11 @@ layout_head('Мои уроки', 'home'); ?>
     <?php elseif (course_completed($user)): ?>
       <p>Все задания приняты — осталось пройти итоговый тест.</p>
       <a class="btn btn-lime" href="<?= url('test.php') ?>">Пройти тест →</a>
+    <?php elseif ($upsell): ?>
+      <p>Бесплатные уроки пройдены — отличная работа! Открой полный курс, чтобы продолжить.</p>
+      <a class="btn btn-lime" href="<?= e($payHref) ?>" target="_blank" rel="noopener">Перейти к оплате →</a>
     <?php else: ?>
-      <p>Бесплатные уроки пройдены. Откройте следующий модуль, чтобы продолжить.</p>
+      <p>Продолжай обучение — следующий шаг уже ждёт.</p>
     <?php endif; ?>
   </div>
   <div class="ring" style="--p:<?= $pct ?>"><div><span><b><?= $pct ?>%</b><small>курса пройдено</small></span></div></div>

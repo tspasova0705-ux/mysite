@@ -14,9 +14,11 @@ if (is_post()) {
     elseif (val('SELECT 1 FROM users WHERE email=?', [$email])) $error = 'Такая почта уже зарегистрирована — войдите.';
     else {
         q("INSERT INTO users(email,name,password_hash,role,created_at,consent_at) VALUES(?,?,?,'student',?,?)", [$email, $name, password_hash($pass, PASSWORD_DEFAULT), now(), now()]);
-        login_user((int)db()->lastInsertId());
+        $uid = (int)db()->lastInsertId();
+        login_user($uid);
+        apply_pending_payment($uid);
         // came from "Купить курс" on the landing -> straight to payment
-        $paid = !empty($_POST['buy']) ? one('SELECT * FROM modules WHERE is_free=0 ORDER BY position, id LIMIT 1') : null;
+        $paid = !empty($_POST['buy']) && empty($_SESSION['celebrate']) ? one('SELECT * FROM modules WHERE is_free=0 ORDER BY position, id LIMIT 1') : null;
         flash('Добро пожаловать! Первый модуль уже открыт.');
         redirect($paid ? 'pay.php?m=' . $paid['id'] : 'index.php');
     }

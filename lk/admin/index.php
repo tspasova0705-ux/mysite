@@ -7,6 +7,7 @@ $pending = all("SELECT s.*, u.name, u.email, l.title FROM submissions s JOIN use
 $pendingCount = (int)val("SELECT COUNT(*) FROM submissions WHERE status='submitted'");
 $payments = all("SELECT p.*, u.name, u.email, m.title FROM payment_requests p JOIN users u ON u.id=p.user_id JOIN modules m ON m.id=p.module_id WHERE p.status='new' ORDER BY p.id");
 $certs = (int)val('SELECT COUNT(*) FROM certificates');
+$autoPaid = all("SELECT p.*, u.name, u.email FROM payment_requests p JOIN users u ON u.id=p.user_id WHERE p.status='auto' ORDER BY p.id DESC LIMIT 10");
 $recent = all("SELECT * FROM users WHERE role='student' ORDER BY id DESC LIMIT 5");
 
 layout_head('Админка', 'index'); ?>
@@ -51,6 +52,15 @@ layout_head('Админка', 'index'); ?>
           <button class="btn btn-lime btn-sm" name="action" value="approve_req">Открыть доступ</button>
           <button class="btn btn-line btn-sm" name="action" value="reject_req" data-confirm="Отклонить заявку?">✕</button>
         </form></td></tr>
+      <?php endforeach; ?>
+    </tbody></table></div>
+    <?php endif; ?>
+    <?php if ($autoPaid): ?>
+    <h2 class="mt" style="margin-bottom:6px">Оплаты GetPlatinum</h2>
+    <p class="small muted" style="margin-bottom:12px">Курс открыт автоматически после возврата со страницы оплаты. Сверьте с платежами в GetPlatinum; если оплаты нет — закройте доступ в «Учениках».</p>
+    <div class="table-wrap"><table class="t"><tbody>
+      <?php foreach ($autoPaid as $p): ?>
+        <tr><td><b><?= e($p['name']) ?></b><div class="small muted"><?= e($p['email']) ?></div></td><td class="small muted"><?= e(date('d.m H:i', strtotime($p['created_at']))) ?></td><td><div class="acts"><a class="btn btn-line btn-sm" href="<?= url('admin/students.php?u=' . $p['user_id'] . '#u' . $p['user_id']) ?>">Ученик</a></div></td></tr>
       <?php endforeach; ?>
     </tbody></table></div>
     <?php endif; ?>

@@ -10,8 +10,9 @@ if (is_post()) {
     if (empty($_POST['agree'])) $error = 'Подтвердите согласие с пользовательским соглашением и офертой.';
     elseif ($u && password_verify(post('password'), $u['password_hash'])) {
         login_user((int)$u['id']);
+        if ($u['role'] !== 'admin') apply_pending_payment((int)$u['id']);
         q('UPDATE users SET consent_at=COALESCE(consent_at, ?) WHERE id=?', [now(), $u['id']]);
-        $paid = !empty($_POST['buy']) && $u['role'] !== 'admin' ? one('SELECT * FROM modules WHERE is_free=0 ORDER BY position, id LIMIT 1') : null;
+        $paid = !empty($_POST['buy']) && empty($_SESSION['celebrate']) && $u['role'] !== 'admin' ? one('SELECT * FROM modules WHERE is_free=0 ORDER BY position, id LIMIT 1') : null;
         redirect($u['role'] === 'admin' ? 'admin/index.php' : ($paid ? 'pay.php?m=' . $paid['id'] : 'index.php'));
     } else {
         usleep(400000);
