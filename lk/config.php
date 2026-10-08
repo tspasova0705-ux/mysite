@@ -8,6 +8,11 @@ const COURSE_NAME = 'Банковские партнёрские програм�
 // Реквизиты (показываются в подвале кабинета).
 const OWNER_NAME = 'ИП Марченко Татьяна Валерьевна';
 const OWNER_INN = '571503991566';
+// Каналы автора (ссылки в подвале кабинета).
+const CHANNELS = [
+    'Telegram' => 'https://t.me/tatirabotadoma',
+    'MAX' => 'https://max.ru/channel_tatirabotadoma',
+];
 const LEGAL_DOCS = [
     'privacy.html' => 'Политика конфиденциальности',
     'agreement.html' => 'Пользовательское соглашение',

@@ -101,6 +101,60 @@ section{padding:100px 0;position:relative}
 
 /* ticker */
 .ticker{overflow:hidden;padding:22px 0;border-bottom:1.5px solid var(--line)}
+
+/* offer cards (look of a partner cabinet, no bank names) */
+.offers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:52px}
+.offer{background:var(--white);border-radius:24px;padding:22px;display:grid;gap:14px;border:1px solid var(--line);box-shadow:0 22px 44px -30px rgba(20,30,90,.45);color:var(--ink);transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.offer-top{display:flex;align-items:center;gap:12px}
+.bank-ic{width:44px;height:44px;border-radius:14px;background:var(--blue);color:var(--white);display:grid;place-items:center;flex:none}
+.offer-top b{display:block;font-weight:800;line-height:1.2}
+.offer-top small{color:var(--muted);font-size:12px;font-weight:600}
+.ochip{margin-left:auto;background:var(--lime);font-weight:800;font-size:11px;letter-spacing:.03em;padding:6px 12px;border-radius:999px;text-transform:uppercase;white-space:nowrap}
+.offer-row{display:flex;justify-content:space-between;gap:10px;font-size:14px;color:var(--muted);padding:10px 0;border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}
+.offer-row b{color:var(--ink)}
+.offer-pay{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.offer-pay span{font-size:13px;color:var(--muted);font-weight:600}
+.offer-pay strong{font-family:Unbounded,sans-serif;font-weight:900;font-size:28px;color:#1f8a5b;white-space:nowrap}
+.offers-note{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
+.float-offer{position:absolute;z-index:3;width:264px;padding:16px;gap:10px;animation:bob 6s ease-in-out infinite;transition:translate .4s ease-out}
+.float-offer .offer-pay strong{font-size:22px}
+.float-offer .ochip{font-size:10px;padding:5px 9px}
+.float-offer .offer-top small{display:none}
+.offer>*{min-width:0}
+.float-offer .offer-row{padding:7px 0}
+.fo1{left:31%;bottom:30px;rotate:-4deg}
+.fo2{right:52px;bottom:40px;rotate:3deg;animation-delay:-3s}
+@media (min-width:981px){.hero-free{display:none}}
+@media (max-width:980px){.float-offer{display:none}}
+@media (max-width:900px){.offers{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;margin-inline:-16px;padding-inline:16px;scrollbar-width:none}.offers .offer{flex:0 0 78%;scroll-snap-align:center}}
+
+/* about */
+.about2{display:grid;grid-template-columns:.85fr 1.15fr;gap:14px;margin-top:52px;align-items:stretch}
+.about-photo{position:relative;background:linear-gradient(160deg,var(--blue),#3a5cf0);border-radius:var(--radius);overflow:hidden;min-height:520px;display:flex;align-items:flex-end;justify-content:center}
+.about-photo img{width:88%;max-width:440px;filter:drop-shadow(0 20px 30px rgba(0,0,0,.25))}
+.about-name{position:absolute;left:22px;bottom:22px;background:var(--lime);border-radius:20px;padding:12px 18px}
+.about-name b{display:block;font-family:Unbounded,sans-serif;font-size:16px;text-transform:uppercase}
+.about-name span{font-size:13px;font-weight:600}
+.about-body{display:flex;flex-direction:column;gap:14px}
+.about-lead{background:var(--white);border-radius:var(--radius);padding:30px;font-size:18px;font-weight:600;line-height:1.5}
+.about-lead em{font-style:normal;color:var(--blue)}
+.fact.lime{background:var(--lime)}
+.fact.lime b{color:var(--ink)}
+.about-quote{background:var(--ink);color:var(--white);border-radius:var(--radius);padding:30px;font-family:Unbounded,sans-serif;font-weight:700;font-size:clamp(15px,1.6vw,19px);line-height:1.4}
+.about-quote::before{content:"“";display:block;font-size:54px;line-height:.6;color:var(--lime);margin-bottom:6px}
+.disclaimer{font-size:12px;color:var(--muted)}
+.proofs{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.proofs img{border-radius:16px;border:1px solid var(--line)}
+@media (max-width:860px){.about2{grid-template-columns:1fr}.about-photo{min-height:420px}.about-lead,.about-quote{padding:22px}}
+
+/* channels */
+.ch-links{display:grid;gap:10px;margin-top:22px}
+.ch-links a{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:18px;background:var(--white);text-decoration:none;font-weight:800;transition:transform .3s,background .3s,color .3s}
+.ch-links a:hover{background:var(--ink);color:var(--lime);transform:translateX(6px)}
+.ch-links .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--blue);color:#fff;flex:none;font-family:Unbounded,sans-serif;font-size:11px;font-weight:900}
+.ch-links small{display:block;font-weight:600;font-size:12px;opacity:.7}
+.final-ch{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px;position:relative;z-index:2}
+.final-ch a{color:#fff;font-weight:700;font-size:14px}
 .ticker-track{display:flex;gap:10px;width:max-content;animation:tick 40s linear infinite}
 .ticker:hover .ticker-track{animation-play-state:paused}
 @keyframes tick{to{transform:translateX(-50%)}}
@@ -229,7 +283,8 @@ section{padding:100px 0;position:relative}
 .plan .old{font-family:Manrope,sans-serif;font-size:15px;font-weight:700;opacity:.8}
 .installment{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:10px 16px;border-radius:999px;background:var(--lime);color:var(--ink);font-family:Unbounded,sans-serif;font-weight:800;font-size:13px;text-transform:uppercase}
 .plan .note{font-size:12px;opacity:.75}
-.contacts{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;margin-top:52px}
+.contacts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:52px}
+.contacts .c-card.lime{background:var(--lime)}
 .contacts .c-card{border-radius:var(--radius);padding:36px}
 .contacts .c-card.blue{background:var(--blue);color:var(--white)}
 .contacts .c-card.gray{background:var(--card)}
@@ -239,7 +294,8 @@ section{padding:100px 0;position:relative}
 .doc-links{display:grid;gap:10px;margin-top:22px}
 .doc-links a{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-radius:18px;background:var(--white);text-decoration:none;font-weight:700;transition:transform .3s,background .3s}
 .doc-links a:hover{background:var(--lime);transform:translateX(6px)}
-@media (max-width:760px){.contacts{grid-template-columns:1fr}.contacts .c-card{padding:26px}.contacts dl{grid-template-columns:1fr;gap:2px}.contacts dd{margin-bottom:10px}}
+@media (max-width:960px){.contacts{grid-template-columns:1fr 1fr}.contacts .c-card.gray{grid-column:1/-1}}
+@media (max-width:760px){.contacts{grid-template-columns:1fr}.contacts .c-card.gray{grid-column:auto}.contacts .c-card{padding:26px}.contacts dl{grid-template-columns:1fr;gap:2px}.contacts dd{margin-bottom:10px}}
 footer{padding:34px 0 50px}
 .foot-links{display:flex;gap:16px;flex-wrap:wrap}
 .foot-links a{color:var(--ink);font-weight:700}
@@ -286,6 +342,7 @@ footer{padding:34px 0 50px}
       <a href="#free" class="pill">Бесплатно</a>
       <a href="#program" class="pill">Программа</a>
       <a href="#plans" class="pill">Тарифы</a>
+      <a href="#about" class="pill">Обо мне</a>
       <a href="#contacts" class="pill">Контакты</a>
     </nav>
     <a href="lk/login.php" class="pill lime">Войти</a>
@@ -319,8 +376,8 @@ footer{padding:34px 0 50px}
         <div class="mid">с нуля до системы</div>
       </div>
 
-      <div class="coin" aria-hidden="true">₽</div>
-      <div class="coin c2" aria-hidden="true">%</div>
+      <div class="offer float-offer fo1"><div class="offer-top"><span class="bank-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M12 3 3 8h18z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg></span><div><b>Банк</b><small>Оффер банка</small></div><span class="ochip">РКО</span></div><div class="offer-row"><span>Целевое действие</span><b>Активация</b></div><div class="offer-pay"><span>Вознаграждение</span><strong>14 000 ₽</strong></div></div>
+      <div class="offer float-offer fo2"><div class="offer-top"><span class="bank-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M12 3 3 8h18z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg></span><div><b>Банк</b><small>Оффер банка</small></div><span class="ochip">Кредитная карта</span></div><div class="offer-row"><span>Целевое действие</span><b>Выдача</b></div><div class="offer-pay"><span>Вознаграждение</span><strong>4 000 ₽</strong></div></div>
 
       <div class="hero-free reveal"><b>5 уроков</b>первого модуля открыты бесплатно — начните сегодня</div>
     </div>
@@ -335,8 +392,25 @@ footer{padding:34px 0 50px}
   </div>
 </div>
 
+<!-- OFFERS -->
+<section id="offers">
+  <div class="wrap">
+    <h2 class="title reveal"><em>Сколько платят</em> банки партнёрам</h2>
+    <p class="sub reveal">Банк платит не за клик, а за результат: открытый счёт, выданную карту, подключённый сервис.</p>
+    <div class="offers">
+      <div class="offer tilt reveal"><div class="offer-top"><span class="bank-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M12 3 3 8h18z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg></span><div><b>Банк</b><small>Оффер банка</small></div><span class="ochip">РКО</span></div><div class="offer-row"><span>Целевое действие</span><b>Активация</b></div><div class="offer-pay"><span>Вознаграждение</span><strong>14 000 ₽</strong></div></div>
+      <div class="offer tilt reveal"><div class="offer-top"><span class="bank-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M12 3 3 8h18z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg></span><div><b>Банк</b><small>Оффер банка</small></div><span class="ochip">Кредитная карта</span></div><div class="offer-row"><span>Целевое действие</span><b>Выдача</b></div><div class="offer-pay"><span>Вознаграждение</span><strong>4 000 ₽</strong></div></div>
+      <div class="offer tilt reveal"><div class="offer-top"><span class="bank-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M12 3 3 8h18z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg></span><div><b>Банк</b><small>Оффер банка</small></div><span class="ochip">Дебетовая карта</span></div><div class="offer-row"><span>Целевое действие</span><b>Активация</b></div><div class="offer-pay"><span>Вознаграждение</span><strong>1 500 ₽</strong></div></div>
+      <div class="offer tilt reveal"><div class="offer-top"><span class="bank-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M12 3 3 8h18z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg></span><div><b>Банк</b><small>Оффер банка</small></div><span class="ochip">Эквайринг</span></div><div class="offer-row"><span>Целевое действие</span><b>Подключение</b></div><div class="offer-pay"><span>Вознаграждение</span><strong>7 000 ₽</strong></div></div>
+      <div class="offer tilt reveal"><div class="offer-top"><span class="bank-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M12 3 3 8h18z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg></span><div><b>Банк</b><small>Оффер банка</small></div><span class="ochip">Кредит наличными</span></div><div class="offer-row"><span>Целевое действие</span><b>Выдача</b></div><div class="offer-pay"><span>Вознаграждение</span><strong>5 000 ₽</strong></div></div>
+      <div class="offer tilt reveal"><div class="offer-top"><span class="bank-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M4 10h16"/><path d="M12 3 3 8h18z"/><path d="M6 10v8M10 10v8M14 10v8M18 10v8"/></svg></span><div><b>Банк</b><small>Оффер банка</small></div><span class="ochip">Регистрация бизнеса</span></div><div class="offer-row"><span>Целевое действие</span><b>Открытие</b></div><div class="offer-pay"><span>Вознаграждение</span><strong>3 000 ₽</strong></div></div>
+    </div>
+    <p class="offers-note reveal">Примеры ставок вознаграждения по банковским офферам. Ставки и условия меняются — актуальные смотрим в кабинетах партнёрских программ.</p>
+  </div>
+</section>
+
 <!-- AUDIENCE -->
-<section id="for">
+<section id="for" style="padding-top:20px">
   <div class="wrap">
     <h2 class="title reveal"><em>Для кого</em> обучение?</h2>
     <div class="aud">
@@ -440,17 +514,23 @@ footer{padding:34px 0 50px}
 <!-- ABOUT -->
 <section id="about" style="padding-top:40px">
   <div class="wrap">
-    <h2 class="title reveal"><em>Об</em> авторе</h2>
-    <div class="about">
-      <div class="q reveal">
-        <small>Почему мне можно доверять</small>
-        <p>«Я не начинала с мысли: найду волшебную схему и уйду с работы. Партнёрки — это не ссылка, а целая система: оффер, клиент, источник, воронка, действие и выплата.»</p>
+    <h2 class="title reveal"><em>Обо</em> мне</h2>
+    <div class="about2">
+      <div class="about-photo reveal">
+        <img data-portrait alt="Татьяна Марченко — автор курса">
+        <div class="about-name"><b>Татьяна Марченко</b><span>автор курса</span></div>
       </div>
-      <div class="facts">
-        <div class="fact reveal"><b>Банк</b><span>Опыт работы в банке — понимаю продукты изнутри</span></div>
-        <div class="fact reveal"><b>1→3</b><span>Прошла путь от доп. дохода к системе сама</span></div>
-        <div class="fact reveal"><b>100%</b><span>Только разрешённый трафик и честные методы</span></div>
-        <div class="fact reveal"><b>Live</b><span>Показываю каждый шаг на экране</span></div>
+      <div class="about-body">
+        <p class="about-lead reveal">Больше <em>десяти лет</em> в банковской сфере — начинала обычным сотрудником банка. Уже <em>пять лет</em> работаю с партнёрскими программами: напрямую с банками и через посреднические сервисы.</p>
+        <div class="facts">
+          <div class="fact reveal"><b>10+ лет</b><span>в банковской сфере — начинала сотрудником банка</span></div>
+          <div class="fact reveal"><b>5 лет</b><span>в партнёрских программах банков</span></div>
+          <div class="fact lime reveal"><b>до 1 млн ₽</b><span>доход в месяц на партнёрках — начинала с 10 000 ₽</span></div>
+          <div class="fact reveal"><b>2 модели</b><span>прямое партнёрство с банками и сервисы-посредники</span></div>
+        </div>
+        <p class="about-quote reveal">Я знаю изнутри, с какими банками работать хорошо, а с какими — сложно. Этим опытом и делюсь в курсе.</p>
+        <div class="proofs" id="proofs" hidden></div>
+        <p class="disclaimer">Указан личный результат автора. Он не является обещанием или гарантией дохода: результат зависит от ваших действий и условий партнёрских программ.</p>
       </div>
     </div>
   </div>
@@ -523,6 +603,13 @@ footer{padding:34px 0 50px}
           <dt>ИНН</dt><dd>571503991566</dd>
         </dl>
       </div>
+      <div class="c-card lime reveal">
+        <h3 style="font-size:16px;font-weight:800">Мои каналы</h3>
+        <div class="ch-links">
+          <a href="https://t.me/tatirabotadoma" target="_blank" rel="noopener"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 18.6 20c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1 9.3-8.4c.4-.4-.1-.6-.6-.2L6 13.5l-4.9-1.5c-1.1-.3-1.1-1.1.2-1.6l19.2-7.4c.9-.3 1.7.2 1.4 1.3z"/></svg></span><span>Telegram<small>@tatirabotadoma</small></span></a>
+          <a href="https://max.ru/channel_tatirabotadoma" target="_blank" rel="noopener"><span class="ic">MAX</span><span>MAX<small>channel_tatirabotadoma</small></span></a>
+        </div>
+      </div>
       <div class="c-card gray reveal">
         <h3 style="font-size:16px;font-weight:800">Документы</h3>
         <div class="doc-links">
@@ -542,6 +629,7 @@ footer{padding:34px 0 50px}
       <div class="big">Первые 5 уроков<br><span style="color:var(--lime)">уже сегодня</span></div>
       <p>Поймите механику партнёрских программ и составьте свой первый маленький тест.</p>
       <button class="btn btn-lime magnetic" data-open-modal><span>Начать бесплатно</span></button>
+      <div class="final-ch"><span>Подписывайтесь на канал:</span><a href="https://t.me/tatirabotadoma" target="_blank" rel="noopener">Telegram</a><a href="https://max.ru/channel_tatirabotadoma" target="_blank" rel="noopener">MAX</a></div>
       <div class="coin" aria-hidden="true">₽</div>
       <div class="coin c2" aria-hidden="true">%</div>
     </div>
@@ -553,7 +641,7 @@ footer{padding:34px 0 50px}
 <footer>
   <div class="wrap foot">
     <span class="pill lime">БАНК_ПАРТНЁРКИ</span>
-    <div class="foot-links"><a href="privacy.html">Политика конфиденциальности</a><a href="agreement.html">Пользовательское соглашение</a><a href="offer.html">Публичная оферта</a></div>
+    <div class="foot-links"><a href="https://t.me/tatirabotadoma" target="_blank" rel="noopener">Telegram</a><a href="https://max.ru/channel_tatirabotadoma" target="_blank" rel="noopener">MAX</a><a href="privacy.html">Политика конфиденциальности</a><a href="agreement.html">Пользовательское соглашение</a><a href="offer.html">Публичная оферта</a></div>
     <p>ИП Марченко Татьяна Валерьевна, ИНН 571503991566. Материалы курса носят образовательный характер и не являются гарантией дохода. Условия партнёрских программ проверяйте в их актуальных официальных правилах.</p>
   </div>
 </footer>
@@ -615,7 +703,7 @@ footer{padding:34px 0 50px}
     });
 
     // hero: photo and coins shift with the cursor at different depths
-    const hero = document.getElementById('hero'), photo = document.getElementById('heroPhoto'), coins = hero.querySelectorAll('.coin');
+    const hero = document.getElementById('hero'), photo = document.getElementById('heroPhoto'), coins = hero.querySelectorAll('.float-offer');
     hero.addEventListener('mousemove', e => {
       const r = hero.getBoundingClientRect();
       const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;

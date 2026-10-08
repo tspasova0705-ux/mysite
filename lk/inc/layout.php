@@ -48,7 +48,7 @@ function layout_foot(): void { ?>
 </main>
 <footer class="foot wrap">
   <span><?= e(SITE_NAME) ?> · <?= e(OWNER_NAME) ?>, ИНН <?= e(OWNER_INN) ?></span>
-  <span class="foot-links"><?php foreach (LEGAL_DOCS as $file => $label): ?><a href="<?= e(BASE) ?>/../<?= $file ?>" target="_blank"><?= $label ?></a><?php endforeach; ?></span>
+  <span class="foot-links"><?php foreach (CHANNELS as $label => $href): ?><a href="<?= e($href) ?>" target="_blank" rel="noopener"><?= e($label) ?></a><?php endforeach; ?><?php foreach (LEGAL_DOCS as $file => $label): ?><a href="<?= e(BASE) ?>/../<?= $file ?>" target="_blank"><?= $label ?></a><?php endforeach; ?></span>
 </footer>
 <script src="<?= url('assets/lk.js') ?>?v=1"></script>
 </body>
