@@ -132,7 +132,7 @@ function seed_course(PDO $pdo): void {
             ->execute([$i + 1, $t['text'], $t['type'], json_encode($t['options'] ?? [], JSON_UNESCAPED_UNICODE), $t['correct'] ?? 0]);
     }
     seed_bonus_files($pdo);
-    $defaults = ['pass_percent' => '70', 'sequential' => '1', 'pay_url' => '',
+    $defaults = ['pass_percent' => '70', 'sequential' => '1', 'pay_url' => 'https://tatimarch.getplatinum.ru/payment/bULBnxH',
         'course_price' => '19 990 ₽', 'price_note' => 'Сегодня 0 ₽ — доступна рассрочка', 'pay_text' => 'После оплаты нажмите «Я оплатил(а)» — администратор откроет доступ.'];
     foreach ($defaults as $k => $v) $pdo->prepare('INSERT OR IGNORE INTO settings(key,value) VALUES(?,?)')->execute([$k, $v]);
     $pdo->commit();
