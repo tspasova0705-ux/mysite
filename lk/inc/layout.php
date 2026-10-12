@@ -9,14 +9,16 @@ function layout_head(string $title, string $active = '', bool $bare = false): vo
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title><?= e($title) ?> · <?= e(SITE_NAME) ?></title>
+<link rel="icon" href="<?= e(BASE) ?>/../assets/logo-mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="<?= e(BASE) ?>/../assets/icon-180.png">
 <link rel="stylesheet" href="<?= e(BASE) ?>/../assets/fonts.css">
-<link rel="stylesheet" href="<?= url('assets/lk.css') ?>?v=2">
+<link rel="stylesheet" href="<?= url('assets/lk.css') ?>?v=3">
 </head>
 <body class="<?= $admin ? 'is-admin' : '' ?>">
 <?php if (!$bare): ?>
 <header class="top">
   <div class="wrap top-in">
-    <a href="<?= url($admin ? 'admin/index.php' : 'index.php') ?>" class="pill lime"><?= e(SITE_NAME) ?><?= $admin ? ' · АДМИН' : '' ?></a>
+    <a href="<?= url($admin ? 'admin/index.php' : 'index.php') ?>" class="logo"><?php logo_html(); ?><?php if ($admin): ?><span class="chip chip-open">админ</span><?php endif; ?></a>
     <?php if ($u): ?>
     <nav class="top-nav">
       <?php if ($admin): ?>
@@ -59,11 +61,11 @@ function layout_foot(): void { ?>
 function auth_art(string $title, array $features): void { ?>
   <div class="auth-art">
     <div>
-      <a href="<?= e(BASE) ?>/../" class="pill lime"><?= e(SITE_NAME) ?></a>
+      <a href="<?= e(BASE) ?>/../" class="logo on-blue"><?php logo_html(true); ?></a>
       <div class="big" style="margin-top:28px"><?= $title ?></div>
     </div>
     <div class="feat"><?php foreach ($features as $f): ?><span><?= e($f) ?></span><?php endforeach; ?></div>
-    <img src="<?= e(BASE) ?>/../assets/portrait-cut.webp" alt="">
+    <span class="auth-photo"><img src="<?= e(BASE) ?>/../assets/portrait-frame.webp" alt="Татьяна Марченко — автор курса"></span>
   </div>
 <?php }
 
@@ -75,3 +77,8 @@ function consent_checks(bool $register): void {
     <label class="check" style="margin-top:10px"><input type="checkbox" name="consent" value="1" required> <span>Даю согласие на обработку персональных данных в соответствии с <a href="<?= $d ?>privacy.html" target="_blank">политикой конфиденциальности</a></span></label>
     <?php endif;
 }
+
+/** Brand logo: mark + "partnerka biz" wordmark. */
+function logo_html(bool $onBlue = false): void { ?>
+<span class="logo-mark"><img src="<?= e(BASE) ?>/../assets/<?= $onBlue ? 'logo-mark-lime.svg' : 'logo-mark.svg' ?>" alt="" width="40" height="40"></span><span class="logo-word">partnerka<b>biz</b></span>
+<?php }

@@ -23,3 +23,7 @@ a{color:var(--blue)}
 footer{padding:28px 0 40px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media (max-width:600px){.head,.doc{padding:24px 20px;border-radius:24px}}
 @media print{.top,.toc,footer{display:none}.head{color:#000;background:none;padding:0}.doc{padding:0}}
+.logo{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.logo img{display:block}
+.logo-word{font-family:Unbounded,sans-serif;font-weight:800;font-size:17px;letter-spacing:-.02em;display:flex;align-items:center;gap:4px}
+.logo-word b{background:var(--lime);border-radius:999px;padding:2px 8px}

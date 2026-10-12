@@ -15,7 +15,7 @@ layout_head('Сертификат', 'test', !current_user()); ?>
 </div>
 <div class="cert-wrap">
   <div class="cert">
-    <span class="brand"><?= e(SITE_NAME) ?></span>
+    <span class="brand logo"><?php logo_html(); ?></span>
     <div>
       <div class="ttl">Серти<span>фикат</span></div>
       <div class="who">подтверждает, что</div>
