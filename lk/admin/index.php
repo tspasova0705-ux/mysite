@@ -7,6 +7,7 @@ $pending = all("SELECT s.*, u.name, u.email, l.title FROM submissions s JOIN use
 $pendingCount = (int)val("SELECT COUNT(*) FROM submissions WHERE status='submitted'");
 $payments = all("SELECT p.*, u.name, u.email, m.title FROM payment_requests p JOIN users u ON u.id=p.user_id JOIN modules m ON m.id=p.module_id WHERE p.status='new' ORDER BY p.id");
 $certs = (int)val('SELECT COUNT(*) FROM certificates');
+$questions = (int)val('SELECT COUNT(*) FROM messages WHERE from_admin=0 AND read_at IS NULL');
 $autoPaid = all("SELECT p.*, u.name, u.email FROM payment_requests p JOIN users u ON u.id=p.user_id WHERE p.status='auto' ORDER BY p.id DESC LIMIT 10");
 $recent = all("SELECT * FROM users WHERE role='student' ORDER BY id DESC LIMIT 5");
 
@@ -25,7 +26,7 @@ layout_head('Админка', 'index'); ?>
   <div class="stat lime"><b><?= $pendingCount ?></b><span>заданий ждут проверки</span></div>
   <div class="stat"><b><?= count($payments) ?></b><span>заявок на оплату</span></div>
   <div class="stat"><b><?= $students ?></b><span>учеников</span></div>
-  <div class="stat"><b><?= $certs ?></b><span>сертификатов выдано</span></div>
+  <a class="stat" href="<?= url('admin/messages.php') ?>" style="text-decoration:none"><b><?= $questions ?></b><span>новых вопросов учеников</span></a>
 </div>
 
 <div class="grid2 mt">

@@ -91,7 +91,13 @@ layout_head('Урок: ' . $lesson['title'], 'course'); ?>
           <div class="video-empty"><div><b>Видео не добавлено</b>Вставьте ссылку ниже или загрузите файл</div></div>
         <?php endif; ?>
       </div>
-      <p class="small muted mt" style="margin-top:16px"><b>Способ 1 — ссылка</b> (рекомендуем): загрузите видео на Kinescope, Rutube, VK Видео или YouTube с ограниченным доступом и вставьте ссылку в поле «Ссылка на видео» ниже, в форме урока.</p>
+      <div class="small muted mt" style="margin-top:16px"><b>Способ 1 — приватная ссылка</b> (рекомендуем). Вставьте её в поле «Ссылка на видео» справа:
+  <ul style="margin:6px 0 0 18px">
+    <li><b>Kinescope</b> — ссылка на видео; в настройках проекта можно разрешить показ только на partnerkabiz.ru.</li>
+    <li><b>Rutube</b> — «Доступ по ссылке», вставьте ссылку целиком (вместе с <code>?p=…</code>).</li>
+    <li><b>VK Видео</b> — у приватного видео: «Поделиться» → «Экспортировать» и вставьте код целиком (в нём есть ключ <code>hash</code>).</li>
+    <li><b>YouTube</b> — видео с доступом «по ссылке».</li>
+  </ul>Видео увидят только ученики, у которых открыт этот урок.</div>
       <form method="post" enctype="multipart/form-data" class="file-input" style="margin-top:12px">
         <?= csrf_field() ?>
         <span class="small muted"><b>Способ 2 — файл</b> mp4/mov/webm, <?= e($limit) ?>:</span>
@@ -139,11 +145,11 @@ layout_head('Урок: ' . $lesson['title'], 'course'); ?>
       <label class="field mt" style="margin-top:14px">Название<input type="text" name="title" value="<?= e($lesson['title']) ?>" required></label>
       <label class="field">Модуль<select name="module_id"><?php foreach (modules() as $m): ?><option value="<?= $m['id'] ?>" <?= (int)$m['id'] === (int)$lesson['module_id'] ? 'selected' : '' ?>><?= e($m['title']) ?></option><?php endforeach; ?></select></label>
       <label class="field">Ссылка на видео<small>Kinescope, Rutube, VK, YouTube или код iframe</small><input type="text" name="video_url" value="<?= e($lesson['video_url']) ?>" placeholder="https://"></label>
-      <label class="field">Конспект урока<small>Строка с «## » в начале — подзаголовок</small><textarea name="body" style="min-height:220px"><?= e($lesson['body']) ?></textarea></label>
+      <label class="field">Описание и конспект урока<small>Строка с «## » в начале — подзаголовок. Ссылки (https://…) станут кликабельными.</small><textarea name="body" style="min-height:220px"><?= e($lesson['body']) ?></textarea></label>
     </div>
     <div class="card lime">
       <h3>Домашнее задание</h3>
-      <label class="field mt" style="margin-top:14px">Пояснение<textarea name="homework_intro" style="min-height:70px"><?= e($lesson['homework_intro']) ?></textarea></label>
+      <label class="field mt" style="margin-top:14px">Пояснение к заданию<small>Можно добавлять ссылки — они станут кликабельными</small><textarea name="homework_intro" style="min-height:70px"><?= e($lesson['homework_intro']) ?></textarea></label>
       <div class="field">Графы (каждую вы отметите при проверке)</div>
       <div class="stack-sm">
         <?php foreach ($items as $k => $it): ?>

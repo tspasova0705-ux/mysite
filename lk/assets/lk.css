@@ -399,3 +399,27 @@ details.box>div{padding-bottom:20px}
 .logo .chip{margin-left:4px}
 .cert .brand.logo{background:none;padding:0}
 @media (max-width:420px){.logo-word{font-size:14px}.logo-mark img{width:34px;height:34px}}
+
+/* messages */
+.badge-n{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:#e53935;color:#fff;font-size:11px;font-family:Manrope,sans-serif;font-weight:800}
+.msgs{display:grid;gap:10px}
+.msg{background:var(--white);border-radius:22px;padding:20px 22px;border-left:4px solid transparent}
+.msg.new{border-left-color:var(--blue)}
+.msg.out{background:var(--card);margin-left:40px}
+.msg-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.msg-head span{font-size:13px;color:var(--muted)}
+.msg-body{font-size:15px}
+.msg-body a,.body a,.hw-item .q a,.note a{color:var(--blue);font-weight:700;word-break:break-all}
+/* stats */
+.funnel{display:grid;gap:8px}
+.frow{display:grid;grid-template-columns:minmax(180px,320px) 1fr 70px;gap:14px;align-items:center}
+.frow .fbar{height:30px;border-radius:10px;background:var(--card);overflow:hidden}
+.frow .fbar i{display:block;height:100%;background:var(--blue);border-radius:10px;min-width:4px}
+.frow b{font-family:Unbounded,sans-serif;font-size:15px;text-align:right}
+.chart{display:flex;align-items:flex-end;gap:4px;height:160px;padding-top:10px}
+.chart div{flex:1;background:var(--blue);border-radius:6px 6px 0 0;position:relative;min-height:2px}
+.chart div:hover{background:var(--ink)}
+.chart div span{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;opacity:0}
+.chart div:hover span{opacity:1}
+.chart-x{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
+@media (max-width:640px){.frow{grid-template-columns:1fr 60px}.frow .fbar{grid-column:1/-1;order:3}}

@@ -12,7 +12,7 @@ function layout_head(string $title, string $active = '', bool $bare = false): vo
 <link rel="icon" href="<?= e(BASE) ?>/../assets/logo-mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="<?= e(BASE) ?>/../assets/icon-180.png">
 <link rel="stylesheet" href="<?= e(BASE) ?>/../assets/fonts.css">
-<link rel="stylesheet" href="<?= url('assets/lk.css') ?>?v=6">
+<link rel="stylesheet" href="<?= url('assets/lk.css') ?>?v=7">
 </head>
 <body class="<?= $admin ? 'is-admin' : '' ?>">
 <?php if (!$bare): ?>
@@ -22,13 +22,15 @@ function layout_head(string $title, string $active = '', bool $bare = false): vo
     <?php if ($u): ?>
     <nav class="top-nav">
       <?php if ($admin): ?>
-        <?php foreach (['index' => 'Обзор', 'homework' => 'Домашки', 'course' => 'Курс', 'students' => 'Ученики', 'test' => 'Тест', 'settings' => 'Настройки'] as $k => $label): ?>
+        <?php foreach (['index' => 'Обзор', 'stats' => 'Статистика', 'homework' => 'Домашки', 'messages' => 'Сообщения', 'course' => 'Курс', 'students' => 'Ученики', 'test' => 'Тест', 'settings' => 'Настройки'] as $k => $label): ?>
           <a href="<?= url("admin/$k.php") ?>" class="pill<?= $active === $k ? ' on' : '' ?>"><?= $label ?></a>
         <?php endforeach; ?>
         <a href="<?= url('index.php') ?>" class="pill ghost">Кабинет ученика</a>
       <?php else: ?>
         <a href="<?= url('index.php') ?>" class="pill<?= $active === 'home' ? ' on' : '' ?>">Мои уроки</a>
         <a href="<?= url('test.php') ?>" class="pill<?= $active === 'test' ? ' on' : '' ?>">Тест и сертификат</a>
+        <?php $unread = unread_count((int)$u['id']); ?>
+        <a href="<?= url('messages.php') ?>" class="pill<?= $active === 'messages' ? ' on' : '' ?>">Сообщения<?php if ($unread): ?> <span class="badge-n"><?= $unread ?></span><?php endif; ?></a>
         <?php if ($u['role'] === 'admin'): ?><a href="<?= url('admin/index.php') ?>" class="pill blue">Админка</a><?php endif; ?>
       <?php endif; ?>
     </nav>

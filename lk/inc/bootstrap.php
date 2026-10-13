@@ -102,10 +102,16 @@ function migrate(PDO $pdo): void {
         id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
         code TEXT NOT NULL UNIQUE, score INTEGER NOT NULL, issued_at TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS settings(key TEXT PRIMARY KEY, value TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS messages(
+        id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        from_admin INTEGER NOT NULL DEFAULT 1, title TEXT NOT NULL DEFAULT '', body TEXT NOT NULL,
+        link TEXT NOT NULL DEFAULT '', read_at TEXT, created_at TEXT NOT NULL);
+    CREATE INDEX IF NOT EXISTS messages_user ON messages(user_id, read_at);
     SQL);
 
     $userCols = array_column($pdo->query('PRAGMA table_info(users)')->fetchAll(), 'name');
     if (!in_array('consent_at', $userCols, true)) $pdo->exec('ALTER TABLE users ADD COLUMN consent_at TEXT');
+    if (!in_array('last_seen', $userCols, true)) $pdo->exec('ALTER TABLE users ADD COLUMN last_seen TEXT');
 
     if ((int)$pdo->query('SELECT COUNT(*) FROM modules')->fetchColumn() === 0) seed_course($pdo);
 }
@@ -257,6 +263,8 @@ function require_login(): array {
     if (!admin_exists()) redirect('setup.php');
     $u = current_user();
     if (!$u) redirect('login.php');
+    // remember activity (at most once every 5 minutes)
+    if (empty($u['last_seen']) || strtotime($u['last_seen']) < time() - 300) q('UPDATE users SET last_seen=? WHERE id=?', [now(), $u['id']]);
     return $u;
 }
 function require_admin(): array {
@@ -408,14 +416,67 @@ function video_embed(string $u): ?string {
     if (preg_match('~src="([^"]+)"~', $u, $m)) $u = html_entity_decode($m[1]); // pasted <iframe> code
     if (preg_match('~(?:youtube\.com/(?:watch\?v=|embed/|shorts/|live/)|youtu\.be/)([\w-]{6,})~', $u, $m)) return 'https://www.youtube.com/embed/' . $m[1];
     if (preg_match('~rutube\.ru/(?:video|play/embed)/(?:private/)?([0-9a-f]{20,})~', $u, $m)) return 'https://rutube.ru/play/embed/' . $m[1] . (preg_match('~p=([\w-]+)~', $u, $p) ? '?p=' . $p[1] : '');
-    if (preg_match('~vk\.(?:com|ru)/video_ext\.php~', $u)) return $u;
-    if (preg_match('~vk(?:video)?\.(?:com|ru)/.*video(-?\d+)_(\d+)~', $u, $m)) return 'https://vk.com/video_ext.php?oid=' . $m[1] . '&id=' . $m[2] . '&hd=2';
+    if (preg_match('~vk(?:video)?\.(?:com|ru)/video_ext\.php~', $u)) return $u;
+    if (preg_match('~vk(?:video)?\.(?:com|ru)/.*video(-?\d+)_(\d+)~', $u, $m)) return 'https://vk.com/video_ext.php?oid=' . $m[1] . '&id=' . $m[2] . '&hd=2' . (preg_match('~(?:hash|access_key)=(\w+)~', $u, $h) ? '&hash=' . $h[1] : '');
     if (preg_match('~kinescope\.io/(?:embed/)?([\w-]+)~', $u, $m)) return 'https://kinescope.io/embed/' . $m[1];
     if (str_starts_with($u, 'https://')) return $u;
     return null;
 }
 
 /** Lesson body: "## Heading" lines become headings, the rest paragraphs. */
+/** Escape text and turn http(s) links into clickable links. */
+function linkify(string $text): string {
+    $out = e($text);
+    return preg_replace_callback('~https?://[^\s<>"\']+~u', function ($m) {
+        $url = rtrim($m[0], '.,;:!?)»');
+        $tail = substr($m[0], strlen($url));
+        return '<a href="' . $url . '" target="_blank" rel="noopener">' . $url . '</a>' . $tail;
+    }, $out);
+}
+
+/** Send a message to a student's cabinet (and optionally by e-mail). */
+function notify(int $userId, string $title, string $body, string $link = '', bool $email = false): void {
+    q('INSERT INTO messages(user_id,from_admin,title,body,link,created_at) VALUES(?,1,?,?,?,?)', [$userId, $title, $body, $link, now()]);
+    if ($email) {
+        $u = one('SELECT email,name FROM users WHERE id=?', [$userId]);
+        if ($u) {
+            $host = $_SERVER['HTTP_HOST'] ?? 'partnerkabiz.ru';
+            $text = $body . ($link ? "\n\n" . $link : '') . "\n\n— " . SITE_NAME . "\nhttps://$host" . url('index.php');
+            @mail($u['email'], '=?UTF-8?B?' . base64_encode($title) . '?=', $text,
+                "From: " . SITE_NAME . " <no-reply@$host>\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit");
+        }
+    }
+}
+function unread_count(int $userId): int { return (int)val('SELECT COUNT(*) FROM messages WHERE user_id=? AND from_admin=1 AND read_at IS NULL', [$userId]); }
+
+/** Where a student is now: a short stage label for statistics. */
+function student_stage(array $u): string {
+    if (val('SELECT 1 FROM certificates WHERE user_id=?', [$u['id']])) return 'certificate';
+    $paid = has_full_access($u);
+    if ($paid && course_completed($u)) return 'test';
+    if ($paid) return 'paid';
+    if (free_completed($u)) return 'free_done';
+    if (val('SELECT 1 FROM submissions WHERE user_id=?', [$u['id']])) return 'learning';
+    return 'registered';
+}
+const STAGES = [
+    'registered' => 'Зарегистрировался, ещё не сдавал домашки',
+    'learning' => 'Проходит бесплатные уроки',
+    'free_done' => 'Прошёл бесплатный модуль, не оплатил',
+    'paid' => 'Оплатил, проходит курс',
+    'test' => 'Все задания приняты, остался тест',
+    'certificate' => 'Получил сертификат',
+];
+
+const FUNNEL = [
+    'registered' => 'Зарегистрировались',
+    'learning' => 'Начали сдавать домашки',
+    'free_done' => 'Прошли бесплатный модуль',
+    'paid' => 'Оплатили курс',
+    'test' => 'Сдали все задания',
+    'certificate' => 'Получили сертификат',
+];
+
 function render_body(string $body): string {
     $html = '';
     foreach (preg_split("~\n{2,}~", trim($body)) as $block) {
@@ -424,8 +485,8 @@ function render_body(string $body): string {
             $line = trim($line);
             if ($line === '') continue;
             if (str_starts_with($line, '## ')) $html .= '<h3>' . e(substr($line, 3)) . '</h3>';
-            elseif (str_starts_with($line, '«')) $html .= '<p class="voice">' . e($line) . '</p>';
-            else $html .= '<p>' . e($line) . '</p>';
+            elseif (str_starts_with($line, '«')) $html .= '<p class="voice">' . linkify($line) . '</p>';
+            else $html .= '<p>' . linkify($line) . '</p>';
         }
     }
     return $html;

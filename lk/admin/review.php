@@ -14,6 +14,13 @@ if (is_post()) {
     }
     q('UPDATE submissions SET admin_comment=? WHERE id=?', [mb_substr(post('comment'), 0, 3000), $sub['id']]);
     $status = refresh_submission((int)$sub['id']);
+    if ($status !== 'submitted') {
+        $link = url('lesson.php?id=' . $sub['lid']);
+        notify((int)$sub['user_id'],
+            $status === 'accepted' ? 'Домашнее задание принято ✓' : 'Домашнее задание нужно доработать',
+            $status === 'accepted' ? "Задание к уроку «{$sub['title']}» принято. Можно переходить к следующему уроку." : "Посмотрите комментарии к уроку «{$sub['title']}», исправьте отмеченные пункты и отправьте ещё раз.",
+            $link, isset($_POST['email']));
+    }
     flash(['accepted' => 'Задание принято — следующий урок открыт ученику.', 'returned' => 'Задание отправлено на доработку.', 'submitted' => 'Отметки сохранены.'][$status]);
     // go to the next submission waiting for review
     $next = val("SELECT id FROM submissions WHERE status='submitted' AND id<>? ORDER BY updated_at LIMIT 1", [$sub['id']]);
@@ -64,6 +71,7 @@ layout_head('Проверка задания', 'homework'); ?>
     <a class="btn btn-line btn-sm" href="<?= url('admin/homework.php') ?>">Назад</a>
     <div class="row">
       <button class="btn btn-line" type="submit">Сохранить</button>
+      <label class="check" style="margin-right:6px"><input type="checkbox" name="email" value="1"> Продублировать на почту</label>
       <button class="btn btn-blue" type="submit" name="and_next" value="1">Сохранить и к следующему</button>
     </div>
   </div>

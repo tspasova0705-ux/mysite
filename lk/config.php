@@ -11,8 +11,8 @@ const OWNER_INN = '571503991566';
 const OWNER_OGRNIP = '321574900003696';
 // Каналы автора (ссылки в подвале кабинета).
 const CHANNELS = [
-    'Telegram' => 'https://t.me/tatirabotadoma',
-    'MAX' => 'https://max.ru/channel_tatirabotadoma',
+    'Telegram' => 'https://t.me/Partnerkabizz',
+    'MAX' => 'https://max.ru/channel_partnerkabiz',
 ];
 const LEGAL_DOCS = [
     'privacy.html' => 'Политика конфиденциальности',

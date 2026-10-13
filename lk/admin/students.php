@@ -10,6 +10,7 @@ if (is_post()) {
             $r = one('SELECT * FROM payment_requests WHERE id=?', [(int)post('req')]);
             if ($r) {
                 grant_paid_access((int)$r['user_id'], (int)$r['module_id']);
+                notify((int)$r['user_id'], 'Доступ к курсу открыт 🎉', 'Оплата подтверждена — все модули курса уже доступны в вашем кабинете.', url('index.php'));
                 q("UPDATE payment_requests SET status='approved' WHERE id=?", [$r['id']]);
                 flash('Доступ открыт.');
             }

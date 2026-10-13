@@ -120,11 +120,11 @@ layout_head($lesson['title'], 'home'); ?>
       <div class="hw-head">
         <div>
           <h2>Домашнее задание</h2>
-          <p style="margin-top:8px;max-width:560px"><?= e($lesson['homework_intro']) ?></p>
+          <p style="margin-top:8px;max-width:560px"><?= nl2br(linkify($lesson['homework_intro'])) ?></p>
         </div>
         <?= state_chip($sub ? $sub['status'] : 'open') ?>
       </div>
-      <?php if ($sub && $sub['admin_comment']): ?><div class="note ok" style="margin-bottom:12px;background:#fff;color:var(--ink)"><b>Комментарий администратора:</b> <?= nl2br(e($sub['admin_comment'])) ?></div><?php endif; ?>
+      <?php if ($sub && $sub['admin_comment']): ?><div class="note ok" style="margin-bottom:12px;background:#fff;color:var(--ink)"><b>Комментарий администратора:</b> <?= nl2br(linkify($sub['admin_comment'])) ?></div><?php endif; ?>
       <div class="hw-items">
         <?php foreach ($items as $k => $it):
             $a = $answers[$it['id']] ?? null;
@@ -134,10 +134,10 @@ layout_head($lesson['title'], 'home'); ?>
           <div class="hw-item <?= $mark === 'done' ? 'is-done' : ($mark === 'redo' ? 'is-redo' : '') ?>">
             <div class="hw-item-top">
               <span class="n"><?= $mark === 'done' ? '✓' : $k + 1 ?></span>
-              <span class="q"><?= e($it['text']) ?></span>
+              <span class="q"><?= linkify($it['text']) ?></span>
               <?= $mark === 'done' ? state_chip('accepted') : ($mark === 'redo' ? state_chip('returned') : ($mark === 'pending' ? state_chip('submitted') : '')) ?>
             </div>
-            <?php if ($a && $a['admin_note']): ?><div class="note <?= $mark === 'done' ? 'ok' : '' ?>"><?= nl2br(e($a['admin_note'])) ?></div><?php endif; ?>
+            <?php if ($a && $a['admin_note']): ?><div class="note <?= $mark === 'done' ? 'ok' : '' ?>"><?= nl2br(linkify($a['admin_note'])) ?></div><?php endif; ?>
             <?php if ($canEdit): ?>
               <textarea name="a[<?= $it['id'] ?>]" placeholder="Ваш ответ"><?= e($a['answer_text'] ?? '') ?></textarea>
               <div class="file-input">
