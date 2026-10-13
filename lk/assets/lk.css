@@ -116,8 +116,8 @@ input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 
 .auth-art .big{font-family:Unbounded,sans-serif;font-weight:900;text-transform:uppercase;font-size:clamp(36px,4.6vw,64px);line-height:.95;letter-spacing:-.03em}
 .auth-art .big em{font-style:normal;color:var(--lime)}
 .auth-photo{position:absolute;right:0;bottom:0;width:min(380px,50%);aspect-ratio:840/1100;overflow:hidden}
-.auth-photo::before{content:"";position:absolute;left:10%;right:0;top:0;height:75%;background:radial-gradient(closest-side,rgba(255,255,255,.24),rgba(255,255,255,0))}
-.auth-photo img{position:absolute;right:0;top:4%;width:100%;max-width:none;-webkit-mask-image:linear-gradient(to right,transparent 0,#000 30%);mask-image:linear-gradient(to right,transparent 0,#000 30%)}
+
+.auth-photo img{position:absolute;right:0;top:4%;width:100%;max-width:none}
 .auth-art .feat{display:grid;justify-items:start;gap:8px;max-width:52%;position:relative;z-index:1}
 .auth-art .feat span{display:inline-flex;align-self:flex-start;padding:8px 14px;border-radius:999px;border:1.5px solid rgba(255,255,255,.4);font-size:13px;font-weight:700}
 .auth-form{background:var(--white);border-radius:36px;padding:48px;display:flex;flex-direction:column;justify-content:center}

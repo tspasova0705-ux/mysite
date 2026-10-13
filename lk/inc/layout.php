@@ -12,7 +12,7 @@ function layout_head(string $title, string $active = '', bool $bare = false): vo
 <link rel="icon" href="<?= e(BASE) ?>/../assets/logo-mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="<?= e(BASE) ?>/../assets/icon-180.png">
 <link rel="stylesheet" href="<?= e(BASE) ?>/../assets/fonts.css">
-<link rel="stylesheet" href="<?= url('assets/lk.css') ?>?v=4">
+<link rel="stylesheet" href="<?= url('assets/lk.css') ?>?v=5">
 </head>
 <body class="<?= $admin ? 'is-admin' : '' ?>">
 <?php if (!$bare): ?>
