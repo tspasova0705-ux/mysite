@@ -115,9 +115,9 @@ input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 
 .auth-art{position:relative;background:var(--blue);color:var(--white);border-radius:36px;padding:44px;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;min-height:520px}
 .auth-art .big{font-family:Unbounded,sans-serif;font-weight:900;text-transform:uppercase;font-size:clamp(36px,4.6vw,64px);line-height:.95;letter-spacing:-.03em}
 .auth-art .big em{font-style:normal;color:var(--lime)}
-.auth-photo{position:absolute;right:0;bottom:0;width:min(380px,50%);aspect-ratio:840/1100;overflow:hidden}
+.auth-photo{position:absolute;right:0;bottom:0;width:min(440px,58%);aspect-ratio:900/1277;overflow:hidden}
 
-.auth-photo img{position:absolute;right:0;top:4%;width:100%;max-width:none}
+.auth-photo img{position:absolute;right:0;bottom:0;width:100%;height:auto;max-width:none}
 .auth-art .feat{display:grid;justify-items:start;gap:8px;max-width:52%;position:relative;z-index:1}
 .auth-art .feat span{display:inline-flex;align-self:flex-start;padding:8px 14px;border-radius:999px;border:1.5px solid rgba(255,255,255,.4);font-size:13px;font-weight:700}
 .auth-form{background:var(--white);border-radius:36px;padding:48px;display:flex;flex-direction:column;justify-content:center}
@@ -126,7 +126,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 
 .auth-form .btn{width:100%;margin-top:6px}
 .auth-switch{margin-top:20px;font-size:14px;color:var(--muted);text-align:center}
 .auth-switch a{color:var(--blue);font-weight:700}
-@media (max-width:860px){.auth{grid-template-columns:1fr}.auth-art{min-height:340px;padding:30px}.auth-photo{width:46%}.auth-art .big{max-width:62%;font-size:28px}.auth-art{min-height:400px!important}.auth-art .feat{display:none}.auth-form{padding:30px 22px}}
+@media (max-width:860px){.auth{grid-template-columns:1fr}.auth-art{min-height:340px;padding:30px}.auth-photo{width:42%}.auth-art .big{max-width:62%;font-size:28px}.auth-art{min-height:400px!important}.auth-art .feat{display:none}.auth-form{padding:30px 22px}}
 
 /* dashboard */
 .hello{position:relative;background:var(--blue);color:var(--white);border-radius:36px;padding:40px 44px;overflow:hidden;display:grid;grid-template-columns:1.3fr 1fr;gap:30px;align-items:center}
