@@ -6,14 +6,10 @@ $f = one('SELECT * FROM files WHERE id=?', [get_int('id')]);
 $path = $f ? STORAGE_DIR . '/files/' . $f['stored_name'] : '';
 if (!$f || !is_file($path)) { http_response_code(404); exit('Файл не найден'); }
 
-// Access: admin — everything; homework files — only the author; lesson files — whoever can open the lesson.
-$ok = $user['role'] === 'admin';
-if (!$ok && $f['kind'] === 'hw') $ok = (int)$f['user_id'] === (int)$user['id'];
-elseif (!$ok && $f['lesson_id']) {
-    $lesson = one('SELECT * FROM lessons WHERE id=?', [$f['lesson_id']]);
-    $ok = $lesson && can_view_lesson($user, $lesson);
-}
-if (!$ok) { http_response_code(403); exit('Нет доступа'); }
+if (!can_access_file($user, $f)) { http_response_code(403); exit('Нет доступа'); }
+
+// View-only guides: students get them only through the built-in viewer (it sends this header), never as a download.
+if (is_view_only($f) && $user['role'] !== 'admin' && ($_SERVER['HTTP_X_GUIDE_VIEWER'] ?? '') !== '1') redirect('viewer.php?id=' . $f['id']);
 
 session_write_close();
 $size = filesize($path);
@@ -25,7 +21,7 @@ header('X-Content-Type-Options: nosniff');
 header('Content-Security-Policy: sandbox; default-src \'none\'; img-src \'self\'; media-src \'self\'; object-src \'self\'');
 header("Content-Disposition: " . ($inline ? 'inline' : 'attachment') . "; filename*=UTF-8''" . rawurlencode($f['orig_name']));
 header('Accept-Ranges: bytes');
-header('Cache-Control: private, max-age=3600');
+header('Cache-Control: ' . (is_view_only($f) ? 'private, no-store' : 'private, max-age=3600'));
 
 // Byte ranges so video can be scrubbed.
 if (isset($_SERVER['HTTP_RANGE']) && preg_match('/bytes=(\d*)-(\d*)/', $_SERVER['HTTP_RANGE'], $m)) {

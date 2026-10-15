@@ -43,11 +43,17 @@ if (is_post()) {
             case 'upload_material':
                 $fid = store_upload($_FILES['material'] ?? [], 'material', $lid, null, mb_substr(post('comment'), 0, 2000));
                 if (!$fid) throw new RuntimeException('Выберите файл.');
-                flash('Файл добавлен.');
+                if (isset($_POST['view_only'])) q('UPDATE files SET view_only=1 WHERE id=?', [$fid]);
+                flash(isset($_POST['view_only']) && val('SELECT mime FROM files WHERE id=?', [$fid]) !== 'application/pdf'
+                    ? 'Файл добавлен. «Только просмотр» работает для PDF — этот файл ученики смогут скачать.' : 'Файл добавлен.');
                 break;
             case 'save_comment':
                 q("UPDATE files SET comment=? WHERE id=? AND lesson_id=? AND kind='material'", [mb_substr(post('comment'), 0, 2000), (int)post('file_id'), $lid]);
                 flash('Комментарий сохранён.');
+                break;
+            case 'toggle_view':
+                q("UPDATE files SET view_only=1-view_only WHERE id=? AND lesson_id=? AND kind='material'", [(int)post('file_id'), $lid]);
+                flash('Режим доступа к файлу изменён.');
                 break;
             case 'delete_material':
                 if (val("SELECT 1 FROM files WHERE id=? AND lesson_id=? AND kind='material'", [(int)post('file_id'), $lid])) delete_file((int)post('file_id'));
@@ -121,6 +127,9 @@ layout_head('Урок: ' . $lesson['title'], 'course'); ?>
               <div class="row" style="margin-top:8px">
                 <button class="btn btn-blue btn-sm" name="action" value="save_comment">Сохранить комментарий</button>
                 <a class="btn btn-line btn-sm" href="<?= url('file.php?id=' . $f['id'] . '&dl=1') ?>">Скачать</a>
+                <?php if ($f['mime'] === 'application/pdf'): ?>
+                  <button class="btn btn-line btn-sm" name="action" value="toggle_view" title="Переключить"><?= $f['view_only'] ? '🔒 Только просмотр' : '⬇ Можно скачать' ?></button>
+                <?php endif; ?>
                 <button class="btn btn-danger btn-sm" name="action" value="delete_material" data-confirm="Удалить файл?">Удалить</button>
               </div>
             </form>
@@ -132,6 +141,8 @@ layout_head('Урок: ' . $lesson['title'], 'course'); ?>
         <h3>Добавить файл</h3>
         <div class="file-input" style="margin:12px 0"><input type="file" name="material" required><span class="small muted"><?= e($limit) ?></span></div>
         <textarea name="comment" placeholder="Комментарий: что это за файл и как им пользоваться" style="min-height:70px"></textarea>
+        <label class="check" style="margin-top:10px"><input type="checkbox" name="view_only" value="1" checked> Только просмотр — ученики открывают PDF в кабинете, без скачивания (для гайдов)</label>
+        <p class="small muted" style="margin-top:6px">Гайд из PowerPoint: «Файл → Сохранить как → PDF», затем загрузите этот PDF сюда.</p>
         <button class="btn btn-lime btn-sm mt" style="margin-top:10px" name="action" value="upload_material">Добавить файл</button>
       </form>
     </div>

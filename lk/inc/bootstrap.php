@@ -22,7 +22,7 @@ session_start();
 $__dir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/lk/index.php')), '/');
 if (str_ends_with($__dir, '/admin')) $__dir = substr($__dir, 0, -6);
 define('BASE', $__dir);
-const DEFAULT_LESSON_TIP = 'Посмотрите урок → Прочитайте и сохраните гайд из «Материалов» → Выполните домашнее задание';
+const DEFAULT_LESSON_TIP = 'Посмотрите урок → Изучите гайд в «Материалах» → Выполните домашнее задание';
 
 function url(string $path = ''): string { return BASE . '/' . ltrim($path, '/'); }
 function e(?string $s): string { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
@@ -114,6 +114,12 @@ function migrate(PDO $pdo): void {
     if (!in_array('consent_at', $userCols, true)) $pdo->exec('ALTER TABLE users ADD COLUMN consent_at TEXT');
     if (!in_array('last_seen', $userCols, true)) $pdo->exec('ALTER TABLE users ADD COLUMN last_seen TEXT');
 
+    $fileCols = array_column($pdo->query('PRAGMA table_info(files)')->fetchAll(), 'name');
+    if (!in_array('view_only', $fileCols, true)) {
+        // View-only files open in the built-in viewer and cannot be downloaded by students. PDFs default to it.
+        $pdo->exec('ALTER TABLE files ADD COLUMN view_only INTEGER NOT NULL DEFAULT 0');
+        $pdo->exec("UPDATE files SET view_only=1 WHERE kind='material' AND mime='application/pdf'");
+    }
     $lessonCols = array_column($pdo->query('PRAGMA table_info(lessons)')->fetchAll(), 'name');
     if (!in_array('sample_answer', $lessonCols, true)) $pdo->exec("ALTER TABLE lessons ADD COLUMN sample_answer TEXT NOT NULL DEFAULT ''");
 
@@ -164,7 +170,7 @@ function apply_content_pack(PDO $pdo): void {
             if (!is_file($path) || $st->fetchColumn()) continue;
             $stored = bin2hex(random_bytes(16));
             if (!copy($path, STORAGE_DIR . '/files/' . $stored)) continue;
-            $pdo->prepare("INSERT INTO files(lesson_id,user_id,kind,stored_name,orig_name,mime,size,comment,created_at) VALUES(?,NULL,'material',?,?,?,?,?,?)")
+            $pdo->prepare("INSERT INTO files(lesson_id,user_id,kind,stored_name,orig_name,mime,size,comment,created_at,view_only) VALUES(?,NULL,'material',?,?,?,?,?,?,1)")
                 ->execute([$lid, $stored, $name, 'application/pdf', filesize($path), $comment, now()]);
         }
     }
@@ -385,6 +391,16 @@ function lesson_state(array $user, array $lesson): string {
 }
 
 function can_view_lesson(array $user, array $lesson): bool { return !in_array(lesson_state($user, $lesson), ['pay', 'wait'], true); }
+
+/** Admin — every file; homework files — only their author; lesson files — whoever can open the lesson. */
+function can_access_file(array $user, array $f): bool {
+    if ($user['role'] === 'admin') return true;
+    if ($f['kind'] === 'hw') return (int)$f['user_id'] === (int)$user['id'];
+    if (!$f['lesson_id']) return false;
+    $lesson = one('SELECT * FROM lessons WHERE id=?', [$f['lesson_id']]);
+    return $lesson && can_view_lesson($user, $lesson);
+}
+function is_view_only(array $f): bool { return !empty($f['view_only']) && $f['mime'] === 'application/pdf'; }
 
 /** Recompute submission status from per-item marks. */
 function refresh_submission(int $subId): string {

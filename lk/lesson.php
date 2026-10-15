@@ -100,7 +100,11 @@ layout_head($lesson['title'], 'home'); ?>
               <b><?= e($f['orig_name']) ?></b><small><?= human_size((int)$f['size']) ?></small>
               <?php if ($f['comment']): ?><div class="comment"><?= nl2br(e($f['comment'])) ?></div><?php endif; ?>
             </div>
-            <a class="btn btn-blue btn-sm" href="<?= url('file.php?id=' . $f['id'] . '&dl=1') ?>">Скачать</a>
+            <?php if (is_view_only($f)): ?>
+              <a class="btn btn-blue btn-sm" href="<?= url('viewer.php?id=' . $f['id']) ?>">Открыть</a>
+            <?php else: ?>
+              <a class="btn btn-blue btn-sm" href="<?= url('file.php?id=' . $f['id'] . '&dl=1') ?>">Скачать</a>
+            <?php endif; ?>
           </div>
         <?php endforeach; ?>
       </div>
