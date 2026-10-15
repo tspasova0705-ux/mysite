@@ -144,8 +144,18 @@ function apply_content_pack(PDO $pdo): void {
             $st = $pdo->prepare('SELECT id, text FROM hw_items WHERE lesson_id=? ORDER BY position, id');
             $st->execute([$lid]);
             $items = $st->fetchAll();
-            if (array_column($items, 'text') === $p['old_hw'] && count($items) === count($p['hw']))
-                foreach ($items as $i => $it) $pdo->prepare('UPDATE hw_items SET text=? WHERE id=?')->execute([$p['hw'][$i], $it['id']]);
+            if (array_column($items, 'text') === $p['old_hw']) {
+                // Items untouched since seeding. Same count: reword in place (keeps students' answers).
+                // Different count: rebuild, but only while nobody has answered this lesson yet.
+                $ids = array_column($items, 'id');
+                $answered = $ids && $pdo->query('SELECT 1 FROM answers WHERE item_id IN (' . implode(',', array_map('intval', $ids)) . ') LIMIT 1')->fetchColumn();
+                if (count($items) === count($p['hw'])) {
+                    foreach ($items as $i => $it) $pdo->prepare('UPDATE hw_items SET text=? WHERE id=?')->execute([$p['hw'][$i], $it['id']]);
+                } elseif (!$answered) {
+                    $pdo->prepare('DELETE FROM hw_items WHERE lesson_id=?')->execute([$lid]);
+                    foreach ($p['hw'] as $i => $t) $pdo->prepare('INSERT INTO hw_items(lesson_id,position,text) VALUES(?,?,?)')->execute([$lid, $i + 1, $t]);
+                }
+            }
         }
         foreach ($p['files'] ?? [] as [$src, $name, $comment]) {
             $path = __DIR__ . '/guides/' . $src;
@@ -194,10 +204,10 @@ function seed_course(PDO $pdo): void {
 /** Attach the bonus templates (lk/inc/bonus) to the lessons they belong to. */
 function seed_bonus_files(PDO $pdo): void {
     $bonus = [
-        'Как читать оффер' => ['pasport-offera.xlsx', 'Паспорт оффера.xlsx', 'Бонус: шаблон паспорта оффера. Заполните его для выбранного оффера — это и есть часть домашнего задания.'],
-        'Аналитика до запуска' => ['tablica-analitiki.xlsx', 'Таблица аналитики.xlsx', 'Бонус: таблица аналитики. Вносите расход, клики, лиды и выплаты — CTR, CPL, CPA и прибыль считаются автоматически.'],
-        'Контент на месяц' => ['kontent-plan-30-dney.xlsx', 'Контент-план на 30 дней.xlsx', 'Бонус: контент-план на 30 дней. Подставьте свой сегмент и оффер, отмечайте готовые публикации.'],
-        'Первый 30-дневный тест' => ['chek-list-pervogo-testa.xlsx', 'Чек-лист первого теста.xlsx', 'Бонус: чек-лист первого теста — пройдите все шаги по порядку.'],
+        'Как читать оффер' => ['pasport-offera', 'Паспорт оффера.xlsx', 'Бонус: шаблон паспорта оффера. Заполните его для выбранного оффера — это и есть часть домашнего задания.'],
+        'Аналитика до запуска' => ['tablica-analitiki', 'Таблица аналитики.xlsx', 'Бонус: таблица аналитики. Вносите расход, клики, лиды и выплаты — CTR, CPL, CPA и прибыль считаются автоматически.'],
+        'Контент на месяц' => ['kontent-plan-30-dney', 'Контент-план на 30 дней.xlsx', 'Бонус: контент-план на 30 дней. Подставьте свой сегмент и оффер, отмечайте готовые публикации.'],
+        'Первый 30-дневный тест' => ['chek-list-pervogo-testa', 'Чек-лист первого теста.xlsx', 'Бонус: чек-лист первого теста — пройдите все шаги по порядку.'],
     ];
     foreach ($bonus as $lessonTitle => [$src, $name, $comment]) {
         $lid = $pdo->prepare('SELECT id FROM lessons WHERE title=? LIMIT 1');
