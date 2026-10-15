@@ -11,8 +11,8 @@ if (is_post()) {
     try {
         switch (post('action')) {
             case 'save':
-                q('UPDATE lessons SET title=?, module_id=?, body=?, video_url=?, homework_intro=? WHERE id=?',
-                    [post('title') ?: 'Урок', (int)post('module_id'), (string)($_POST['body'] ?? ''), post('video_url'), post('homework_intro'), $lid]);
+                q('UPDATE lessons SET title=?, module_id=?, body=?, video_url=?, homework_intro=?, sample_answer=? WHERE id=?',
+                    [post('title') ?: 'Урок', (int)post('module_id'), (string)($_POST['body'] ?? ''), post('video_url'), post('homework_intro'), trim((string)($_POST['sample_answer'] ?? '')), $lid]);
                 if ((int)post('module_id') !== (int)$lesson['module_id']) {
                     q('UPDATE lessons SET position=(SELECT COALESCE(MAX(position),0)+1 FROM lessons WHERE module_id=?) WHERE id=?', [(int)post('module_id'), $lid]);
                 }
@@ -160,6 +160,7 @@ layout_head('Урок: ' . $lesson['title'], 'course'); ?>
         <?php endforeach; ?>
       </div>
       <label class="field mt" style="margin-top:14px">Новые графы<small>Каждая строка — отдельный пункт</small><textarea name="new_items" style="min-height:70px"></textarea></label>
+      <label class="field mt" style="margin-top:14px">Пример ответа<small>Ученик увидит его под кнопкой «Посмотреть пример ответа». Оставьте пустым, чтобы не показывать.</small><textarea name="sample_answer" style="min-height:110px"><?= e($lesson['sample_answer']) ?></textarea></label>
       <p class="small">Без граф урок открывается без проверки.</p>
     </div>
     <button class="btn btn-blue" name="action" value="save">Сохранить урок</button>

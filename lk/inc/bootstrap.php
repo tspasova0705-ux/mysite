@@ -22,6 +22,7 @@ session_start();
 $__dir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/lk/index.php')), '/');
 if (str_ends_with($__dir, '/admin')) $__dir = substr($__dir, 0, -6);
 define('BASE', $__dir);
+const DEFAULT_LESSON_TIP = 'Посмотрите урок → Прочитайте и сохраните гайд из «Материалов» → Выполните домашнее задание';
 
 function url(string $path = ''): string { return BASE . '/' . ltrim($path, '/'); }
 function e(?string $s): string { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
@@ -113,7 +114,52 @@ function migrate(PDO $pdo): void {
     if (!in_array('consent_at', $userCols, true)) $pdo->exec('ALTER TABLE users ADD COLUMN consent_at TEXT');
     if (!in_array('last_seen', $userCols, true)) $pdo->exec('ALTER TABLE users ADD COLUMN last_seen TEXT');
 
+    $lessonCols = array_column($pdo->query('PRAGMA table_info(lessons)')->fetchAll(), 'name');
+    if (!in_array('sample_answer', $lessonCols, true)) $pdo->exec("ALTER TABLE lessons ADD COLUMN sample_answer TEXT NOT NULL DEFAULT ''");
+
     if ((int)$pdo->query('SELECT COUNT(*) FROM modules')->fetchColumn() === 0) seed_course($pdo);
+    apply_content_pack($pdo);
+}
+
+/**
+ * One-time content update (inc/content.json): attaches lesson guides (inc/guides/*.pdf), fills empty sample answers
+ * and rewrites homework items only where they still match the original seed text — admin edits are never overwritten.
+ */
+function apply_content_pack(PDO $pdo): void {
+    $file = __DIR__ . '/content.json';
+    if (!is_file($file)) return;
+    $pack = json_decode((string)file_get_contents($file), true) ?: [];
+    $ver = (int)($pack['version'] ?? 0);
+    $cur = $pdo->query("SELECT value FROM settings WHERE key='content_v'")->fetchColumn();
+    if ($ver <= (int)$cur) return;
+    $pdo->beginTransaction();
+    foreach ($pack['lessons'] ?? [] as $p) {
+        $st = $pdo->prepare('SELECT id, sample_answer FROM lessons WHERE title=? ORDER BY id LIMIT 1');
+        $st->execute([$p['title']]);
+        if (!($l = $st->fetch())) continue;
+        $lid = (int)$l['id'];
+        if (!empty($p['sample']) && trim((string)$l['sample_answer']) === '')
+            $pdo->prepare('UPDATE lessons SET sample_answer=? WHERE id=?')->execute([$p['sample'], $lid]);
+        if (!empty($p['hw'])) {
+            $st = $pdo->prepare('SELECT id, text FROM hw_items WHERE lesson_id=? ORDER BY position, id');
+            $st->execute([$lid]);
+            $items = $st->fetchAll();
+            if (array_column($items, 'text') === $p['old_hw'] && count($items) === count($p['hw']))
+                foreach ($items as $i => $it) $pdo->prepare('UPDATE hw_items SET text=? WHERE id=?')->execute([$p['hw'][$i], $it['id']]);
+        }
+        foreach ($p['files'] ?? [] as [$src, $name, $comment]) {
+            $path = __DIR__ . '/guides/' . $src;
+            $st = $pdo->prepare("SELECT 1 FROM files WHERE lesson_id=? AND kind='material' AND orig_name=?");
+            $st->execute([$lid, $name]);
+            if (!is_file($path) || $st->fetchColumn()) continue;
+            $stored = bin2hex(random_bytes(16));
+            if (!copy($path, STORAGE_DIR . '/files/' . $stored)) continue;
+            $pdo->prepare("INSERT INTO files(lesson_id,user_id,kind,stored_name,orig_name,mime,size,comment,created_at) VALUES(?,NULL,'material',?,?,?,?,?,?)")
+                ->execute([$lid, $stored, $name, 'application/pdf', filesize($path), $comment, now()]);
+        }
+    }
+    $pdo->prepare("INSERT INTO settings(key,value) VALUES('content_v',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value")->execute([(string)$ver]);
+    $pdo->commit();
 }
 
 function seed_course(PDO $pdo): void {

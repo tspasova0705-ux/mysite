@@ -9,6 +9,7 @@ if (is_post()) {
         set_setting('course_price', post('course_price'));
         set_setting('price_note', post('price_note'));
         set_setting('pay_text', post('pay_text'));
+        set_setting('lesson_tip', post('lesson_tip'));
         set_setting('pass_percent', (string)max(1, min(100, (int)post('pass_percent'))));
         set_setting('sequential', isset($_POST['sequential']) ? '1' : '0');
         flash('Настройки сохранены.');
@@ -35,6 +36,7 @@ layout_head('Настройки', 'settings'); ?>
     </div>
     <label class="field">Общая ссылка на оплату<small>Используется, если у модуля нет своей ссылки</small><input type="url" name="pay_url" value="<?= e(setting('pay_url')) ?>" placeholder="https://"></label>
     <label class="field">Текст на странице оплаты<textarea name="pay_text" style="min-height:80px"><?= e(setting('pay_text')) ?></textarea></label>
+    <label class="field">Плашка «порядок работы» в уроке<small>Шаги через «→». Оставьте пустым, чтобы скрыть плашку.</small><input type="text" name="lesson_tip" value="<?= e(setting('lesson_tip', DEFAULT_LESSON_TIP)) ?>"></label>
     <label class="field">Проходной балл итогового теста, %<input type="number" name="pass_percent" min="1" max="100" value="<?= e(setting('pass_percent', '70')) ?>"></label>
     <label class="check"><input type="checkbox" name="sequential" value="1" <?= setting('sequential', '1') === '1' ? 'checked' : '' ?>> Открывать следующий урок только после того, как домашнее задание предыдущего принято</label>
     <button class="btn btn-blue mt">Сохранить</button>

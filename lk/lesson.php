@@ -114,6 +114,14 @@ layout_head($lesson['title'], 'home'); ?>
     </details>
     <?php endif; ?>
 
+    <?php if ($items && ($tip = setting('lesson_tip', DEFAULT_LESSON_TIP)) !== ''): ?>
+    <div class="steps-tip reveal">
+      <?php foreach (preg_split('~\s*→\s*~u', $tip) as $i => $step): ?>
+        <?php if ($i): ?><span class="arr">→</span><?php endif; ?><span class="st"><b><?= $i + 1 ?></b><?= e($step) ?></span>
+      <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
     <?php if ($items): ?>
     <form class="hw reveal" id="homework" method="post" enctype="multipart/form-data">
       <?= csrf_field() ?>
@@ -124,6 +132,9 @@ layout_head($lesson['title'], 'home'); ?>
         </div>
         <?= state_chip($sub ? $sub['status'] : 'open') ?>
       </div>
+      <?php if (trim($lesson['sample_answer']) !== ''): ?>
+      <details class="sample"><summary>Посмотреть пример ответа</summary><div class="body"><?= nl2br(linkify($lesson['sample_answer'])) ?><p class="small muted" style="margin-top:10px">Это ориентир по объёму и смыслу. Пишите своими словами и про свой пример.</p></div></details>
+      <?php endif; ?>
       <?php if ($sub && $sub['admin_comment']): ?><div class="note ok" style="margin-bottom:12px;background:#fff;color:var(--ink)"><b>Комментарий администратора:</b> <?= nl2br(linkify($sub['admin_comment'])) ?></div><?php endif; ?>
       <div class="hw-items">
         <?php foreach ($items as $k => $it):
