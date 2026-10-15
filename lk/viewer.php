@@ -6,8 +6,8 @@ $f = one("SELECT * FROM files WHERE id=? AND kind='material'", [get_int('id')]);
 if (!$f || !can_access_file($user, $f)) { flash('Файл недоступен.', 'err'); redirect('index.php'); }
 if (!is_view_only($f)) redirect('file.php?id=' . $f['id'] . '&dl=1');
 $lesson = $f['lesson_id'] ? one('SELECT id, title FROM lessons WHERE id=?', [$f['lesson_id']]) : null;
-// Watermark: who opened the file. Discourages passing screenshots around.
-$mark = $user['name'] . ' · ' . $user['email'];
+// Watermark: where the material comes from, so screenshots always carry the brand and the site.
+$mark = SITE_NAME . ' · partnerkabiz.ru';
 
 layout_head(preg_replace('~\.pdf$~i', '', $f['orig_name']), 'home'); ?>
 <style>
