@@ -41,11 +41,14 @@ if (is_post()) {
                 flash('Видеофайл удалён.');
                 break;
             case 'upload_material':
+                // A presentation cannot be shown in the browser; refuse it rather than silently making it downloadable.
+                $ext = strtolower(pathinfo((string)($_FILES['material']['name'] ?? ''), PATHINFO_EXTENSION));
+                if (isset($_POST['view_only']) && in_array($ext, ['pptx', 'ppt', 'key', 'odp', 'docx', 'doc'], true))
+                    throw new RuntimeException('Файл не добавлен: ученики смогут открыть его только скачав. Чтобы гайд открывался в кабинете без скачивания, сохраните его как PDF — в PowerPoint «Файл → Сохранить как → PDF» (или «Экспорт → PDF») — и загрузите PDF. Если этот файл нужно именно скачивать, снимите галочку «Только просмотр».');
                 $fid = store_upload($_FILES['material'] ?? [], 'material', $lid, null, mb_substr(post('comment'), 0, 2000));
                 if (!$fid) throw new RuntimeException('Выберите файл.');
                 if (isset($_POST['view_only'])) q('UPDATE files SET view_only=1 WHERE id=?', [$fid]);
-                flash(isset($_POST['view_only']) && val('SELECT mime FROM files WHERE id=?', [$fid]) !== 'application/pdf'
-                    ? 'Файл добавлен. «Только просмотр» работает для PDF — этот файл ученики смогут скачать.' : 'Файл добавлен.');
+                flash('Файл добавлен.');
                 break;
             case 'save_comment':
                 q("UPDATE files SET comment=? WHERE id=? AND lesson_id=? AND kind='material'", [mb_substr(post('comment'), 0, 2000), (int)post('file_id'), $lid]);
@@ -128,7 +131,9 @@ layout_head('Урок: ' . $lesson['title'], 'course'); ?>
                 <button class="btn btn-blue btn-sm" name="action" value="save_comment">Сохранить комментарий</button>
                 <a class="btn btn-line btn-sm" href="<?= url('file.php?id=' . $f['id'] . '&dl=1') ?>">Скачать</a>
                 <?php if ($f['mime'] === 'application/pdf'): ?>
-                  <button class="btn btn-line btn-sm" name="action" value="toggle_view" title="Переключить"><?= $f['view_only'] ? '🔒 Только просмотр' : '⬇ Можно скачать' ?></button>
+                  <button class="btn btn-line btn-sm" name="action" value="toggle_view" title="Нажмите, чтобы переключить"><?= $f['view_only'] ? '🔒 Только просмотр' : '⬇ Можно скачать' ?></button>
+                <?php else: ?>
+                  <span class="small" style="color:#c0392b">⬇ Ученики скачивают этот файл. Только просмотр — для PDF.</span>
                 <?php endif; ?>
                 <button class="btn btn-danger btn-sm" name="action" value="delete_material" data-confirm="Удалить файл?">Удалить</button>
               </div>
@@ -142,7 +147,7 @@ layout_head('Урок: ' . $lesson['title'], 'course'); ?>
         <div class="file-input" style="margin:12px 0"><input type="file" name="material" required><span class="small muted"><?= e($limit) ?></span></div>
         <textarea name="comment" placeholder="Комментарий: что это за файл и как им пользоваться" style="min-height:70px"></textarea>
         <label class="check" style="margin-top:10px"><input type="checkbox" name="view_only" value="1" checked> Только просмотр — ученики открывают PDF в кабинете, без скачивания (для гайдов)</label>
-        <p class="small muted" style="margin-top:6px">Гайд из PowerPoint: «Файл → Сохранить как → PDF», затем загрузите этот PDF сюда.</p>
+        <p class="small muted" style="margin-top:6px"><b>Гайд из PowerPoint:</b> сначала «Файл → Сохранить как → PDF» (или «Экспорт → PDF»), затем загрузите сюда этот PDF. Файл .pptx кабинет показать не может — его можно только скачать.</p>
         <button class="btn btn-lime btn-sm mt" style="margin-top:10px" name="action" value="upload_material">Добавить файл</button>
       </form>
     </div>
