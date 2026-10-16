@@ -122,6 +122,10 @@ function migrate(PDO $pdo): void {
     }
     $lessonCols = array_column($pdo->query('PRAGMA table_info(lessons)')->fetchAll(), 'name');
     if (!in_array('sample_answer', $lessonCols, true)) $pdo->exec("ALTER TABLE lessons ADD COLUMN sample_answer TEXT NOT NULL DEFAULT ''");
+    // optional second video per lesson (link or uploaded file); existing lessons are left as they are
+    if (!in_array('video2_url', $lessonCols, true)) $pdo->exec("ALTER TABLE lessons ADD COLUMN video2_url TEXT NOT NULL DEFAULT ''");
+    if (!in_array('video2_title', $lessonCols, true)) $pdo->exec("ALTER TABLE lessons ADD COLUMN video2_title TEXT NOT NULL DEFAULT ''");
+    if (!in_array('video2_file_id', $lessonCols, true)) $pdo->exec('ALTER TABLE lessons ADD COLUMN video2_file_id INTEGER');
 
     if ((int)$pdo->query('SELECT COUNT(*) FROM modules')->fetchColumn() === 0) seed_course($pdo);
     apply_content_pack($pdo);

@@ -11,8 +11,8 @@ if (is_post()) {
     try {
         switch (post('action')) {
             case 'save':
-                q('UPDATE lessons SET title=?, module_id=?, body=?, video_url=?, homework_intro=?, sample_answer=? WHERE id=?',
-                    [post('title') ?: 'Урок', (int)post('module_id'), (string)($_POST['body'] ?? ''), post('video_url'), post('homework_intro'), trim((string)($_POST['sample_answer'] ?? '')), $lid]);
+                q('UPDATE lessons SET title=?, module_id=?, body=?, video_url=?, video2_url=?, video2_title=?, homework_intro=?, sample_answer=? WHERE id=?',
+                    [post('title') ?: 'Урок', (int)post('module_id'), (string)($_POST['body'] ?? ''), post('video_url'), post('video2_url'), mb_substr(post('video2_title'), 0, 200), post('homework_intro'), trim((string)($_POST['sample_answer'] ?? '')), $lid]);
                 if ((int)post('module_id') !== (int)$lesson['module_id']) {
                     q('UPDATE lessons SET position=(SELECT COALESCE(MAX(position),0)+1 FROM lessons WHERE module_id=?) WHERE id=?', [(int)post('module_id'), $lid]);
                 }
@@ -39,6 +39,18 @@ if (is_post()) {
                 if ($lesson['video_file_id']) delete_file((int)$lesson['video_file_id']);
                 q('UPDATE lessons SET video_file_id=NULL WHERE id=?', [$lid]);
                 flash('Видеофайл удалён.');
+                break;
+            case 'upload_video2':
+                $fid = store_upload($_FILES['video2'] ?? [], 'video', $lid, null, '', VIDEO_EXT);
+                if (!$fid) throw new RuntimeException('Выберите видеофайл.');
+                if ($lesson['video2_file_id']) delete_file((int)$lesson['video2_file_id']);
+                q('UPDATE lessons SET video2_file_id=? WHERE id=?', [$fid, $lid]);
+                flash('Второе видео загружено.');
+                break;
+            case 'remove_video2':
+                if ($lesson['video2_file_id']) delete_file((int)$lesson['video2_file_id']);
+                q('UPDATE lessons SET video2_file_id=NULL WHERE id=?', [$lid]);
+                flash('Второй видеофайл удалён.');
                 break;
             case 'upload_material':
                 // A presentation cannot be shown in the browser; refuse it rather than silently making it downloadable.
@@ -73,6 +85,8 @@ $items = all('SELECT * FROM hw_items WHERE lesson_id=? ORDER BY position, id', [
 $materials = all("SELECT * FROM files WHERE lesson_id=? AND kind='material' ORDER BY id", [$lid]);
 $video = $lesson['video_file_id'] ? one('SELECT * FROM files WHERE id=?', [$lesson['video_file_id']]) : null;
 $embed = video_embed($lesson['video_url']);
+$video2 = $lesson['video2_file_id'] ? one('SELECT * FROM files WHERE id=?', [$lesson['video2_file_id']]) : null;
+$embed2 = video_embed($lesson['video2_url']);
 $limit = 'до ' . ini_get('upload_max_filesize') . ' (лимит хостинга)';
 
 layout_head('Урок: ' . $lesson['title'], 'course'); ?>
@@ -112,6 +126,27 @@ layout_head('Урок: ' . $lesson['title'], 'course'); ?>
         <span class="small muted"><b>Способ 2 — файл</b> mp4/mov/webm, <?= e($limit) ?>:</span>
         <input type="file" name="video" accept="video/mp4,video/quicktime,video/webm,.m4v" required>
         <button class="btn btn-blue btn-sm" name="action" value="upload_video">Загрузить видео</button>
+      </form>
+    </div>
+
+    <!-- SECOND VIDEO (optional) -->
+    <div class="card">
+      <h2>Второе видео <span class="small muted" style="font-weight:500">— необязательно</span></h2>
+      <div class="mt" style="margin-top:14px">
+        <?php if ($video2): ?>
+          <div class="video"><video controls preload="metadata" src="<?= url('file.php?id=' . $video2['id']) ?>"></video></div>
+          <form method="post" class="row between" style="margin-top:10px"><?= csrf_field() ?><span class="small muted">Файл: <?= e($video2['orig_name']) ?> · <?= human_size((int)$video2['size']) ?></span><button class="btn btn-danger btn-sm" name="action" value="remove_video2" data-confirm="Удалить второй видеофайл?">Удалить видео</button></form>
+        <?php elseif ($embed2): ?>
+          <div class="video"><iframe src="<?= e($embed2) ?>" allowfullscreen></iframe></div>
+        <?php else: ?>
+          <div class="video-empty"><div><b>Второго видео нет</b>Если нужно, вставьте ссылку в поле «Ссылка на второе видео» справа или загрузите файл</div></div>
+        <?php endif; ?>
+      </div>
+      <form method="post" enctype="multipart/form-data" class="file-input" style="margin-top:12px">
+        <?= csrf_field() ?>
+        <span class="small muted"><b>Файл</b> mp4/mov/webm, <?= e($limit) ?>:</span>
+        <input type="file" name="video2" accept="video/mp4,video/quicktime,video/webm,.m4v" required>
+        <button class="btn btn-blue btn-sm" name="action" value="upload_video2">Загрузить второе видео</button>
       </form>
     </div>
 
@@ -161,6 +196,8 @@ layout_head('Урок: ' . $lesson['title'], 'course'); ?>
       <label class="field mt" style="margin-top:14px">Название<input type="text" name="title" value="<?= e($lesson['title']) ?>" required></label>
       <label class="field">Модуль<select name="module_id"><?php foreach (modules() as $m): ?><option value="<?= $m['id'] ?>" <?= (int)$m['id'] === (int)$lesson['module_id'] ? 'selected' : '' ?>><?= e($m['title']) ?></option><?php endforeach; ?></select></label>
       <label class="field">Ссылка на видео<small>Kinescope, Rutube, VK, YouTube или код iframe</small><input type="text" name="video_url" value="<?= e($lesson['video_url']) ?>" placeholder="https://"></label>
+      <label class="field">Ссылка на второе видео<small>Необязательно. Те же сервисы, что и для первого</small><input type="text" name="video2_url" value="<?= e($lesson['video2_url']) ?>" placeholder="https://"></label>
+      <label class="field">Подпись ко второму видео<small>Например: «Разбор кабинета». Можно оставить пустым</small><input type="text" name="video2_title" value="<?= e($lesson['video2_title']) ?>" maxlength="200"></label>
       <label class="field">Описание и конспект урока<small>Строка с «## » в начале — подзаголовок. Ссылки (https://…) станут кликабельными.</small><textarea name="body" style="min-height:220px"><?= e($lesson['body']) ?></textarea></label>
     </div>
     <div class="card lime">

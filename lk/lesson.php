@@ -66,6 +66,7 @@ $nextOpen = $nextL && can_view_lesson($user, $nextL);
 $lessonNo = array_search((int)$lesson['id'], array_map(fn($l) => (int)$l['id'], $siblings), true) + 1;
 $editable = !$sub || $sub['status'] !== 'accepted';
 $embed = $lesson['video_url'] ? video_embed($lesson['video_url']) : null;
+$embed2 = $lesson['video2_url'] ? video_embed($lesson['video2_url']) : null;
 
 layout_head($lesson['title'], 'home'); ?>
 
@@ -87,6 +88,15 @@ layout_head($lesson['title'], 'home'); ?>
       <div class="video reveal"><iframe src="<?= e($embed) ?>" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
     <?php else: ?>
       <div class="video-empty reveal"><div><b>Видео скоро появится</b>Пока изучите конспект и материалы ниже.</div></div>
+    <?php endif; ?>
+
+    <?php if ($lesson['video2_file_id'] || $embed2): ?>
+      <?php if (trim($lesson['video2_title']) !== ''): ?><h2 class="reveal" style="margin-top:6px"><?= e($lesson['video2_title']) ?></h2><?php endif; ?>
+      <?php if ($lesson['video2_file_id']): ?>
+        <div class="video reveal"><video controls preload="metadata" controlsList="nodownload" src="<?= url('file.php?id=' . $lesson['video2_file_id']) ?>"></video></div>
+      <?php else: ?>
+        <div class="video reveal"><iframe src="<?= e($embed2) ?>" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+      <?php endif; ?>
     <?php endif; ?>
 
     <?php if ($materials): ?>

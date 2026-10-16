@@ -77,7 +77,7 @@ layout_head('Курс', 'course'); ?>
       <div class="admin-lesson">
         <span class="n"><?= $li + 1 ?></span>
         <a href="<?= url('admin/lesson.php?id=' . $l['id']) ?>" style="font-weight:700;text-decoration:none"><?= e($l['title']) ?>
-          <span class="small muted" style="font-weight:500"> · <?= hw_count((int)$l['id']) ?> граф<?= ($l['video_url'] || $l['video_file_id']) ? ' · 🎬 видео' : '' ?><?= (int)val("SELECT COUNT(*) FROM files WHERE lesson_id=? AND kind='material'", [$l['id']]) ? ' · 📎 файлы' : '' ?></span></a>
+          <span class="small muted" style="font-weight:500"> · <?= hw_count((int)$l['id']) ?> граф<?= ($l['video_url'] || $l['video_file_id']) ? (($l['video2_url'] || $l['video2_file_id']) ? ' · 🎬 2 видео' : ' · 🎬 видео') : '' ?><?= (int)val("SELECT COUNT(*) FROM files WHERE lesson_id=? AND kind='material'", [$l['id']]) ? ' · 📎 файлы' : '' ?></span></a>
         <form method="post" class="row" style="gap:6px">
           <?= csrf_field() ?><input type="hidden" name="id" value="<?= $l['id'] ?>"><input type="hidden" name="dir" value="0">
           <button class="icon-btn" name="action" value="move_lesson" onclick="this.form.dir.value=-1" title="Выше">↑</button>
